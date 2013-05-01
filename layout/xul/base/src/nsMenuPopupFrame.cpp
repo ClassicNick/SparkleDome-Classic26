@@ -1626,9 +1626,8 @@ nsMenuPopupFrame::FindMenuWithShortcut(nsIDOMKeyEvent* aKeyEvent, bool& doAction
   doAction = false;
 
   // Enumerate over our list of frames.
-  nsIFrame* immediateParent = nullptr;
-  PresContext()->PresShell()->
-    FrameConstructor()->GetInsertionPoint(this, nullptr, &immediateParent);
+  nsIFrame* immediateParent = PresContext()->PresShell()->
+    FrameConstructor()->GetInsertionPoint(GetContent(), nullptr);
   if (!immediateParent)
     immediateParent = this;
 
