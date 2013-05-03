@@ -640,7 +640,7 @@ class MOZ_STACK_CLASS Rooted : public js::RootedBase<T>
 
   private:
     void commonInit(Rooted<void*> **thingGCRooters) {
-#if defined(DEBUG) && defined(JS_GC_ZEAL) && defined(JSGC_ROOT_ANALYSIS) && !defined(JS_THREADSAFE)
+#ifdef JSGC_TRACK_EXACT_ROOTS
         scanned = false;
 #endif
 #ifdef JSGC_TRACK_EXACT_ROOTS
