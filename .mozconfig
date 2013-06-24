@@ -6,7 +6,7 @@
 #mk_add_options MOZ_MAKE_FLAGS="-j3"
 
 # Set line below to your desired object directory
-mk_add_options MOZ_OBJDIR=e:/objdir/pmupdates/master/obj-pmvc80-release
+mk_add_options MOZ_OBJDIR=r:/obj-pmvc80-release
 #WIN32_REDIST_DIR=j:/Browsers/VC8Compat/redist/VC80/SP1
 
 
@@ -42,8 +42,7 @@ ac_add_options --enable-sps
 ac_add_options --disable-skia
 ac_add_options --disable-maintenance-service
 ac_add_options --disable-updater
-ac_add_options --disable-cubeb
-ac_add_options --disable-websms-backend
+ac_add_options --enable-cubeb
 ac_add_options --disable-webrtc
 ac_add_options --disable-wmf
 ac_add_options --with-windows-version=600
