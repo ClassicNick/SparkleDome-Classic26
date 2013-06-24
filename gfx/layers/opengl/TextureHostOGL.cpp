@@ -99,27 +99,6 @@ WrapMode(gl::GLContext *aGl, bool aAllowRepeat)
   return LOCAL_GL_CLAMP_TO_EDGE;
 }
 
-gfx::SurfaceFormat
-FormatFromShaderType(ShaderProgramType aShaderType)
-{
-  switch (aShaderType) {
-    case RGBALayerProgramType:
-    case RGBALayerExternalProgramType:
-    case RGBARectLayerProgramType:
-    case RGBAExternalLayerProgramType:
-      return FORMAT_R8G8B8A8;
-    case RGBXLayerProgramType:
-      return FORMAT_R8G8B8X8;
-    case BGRALayerProgramType:
-      return FORMAT_B8G8R8A8;
-    case BGRXLayerProgramType:
-      return FORMAT_B8G8R8X8;
-    default:
-      MOZ_NOT_REACHED("Unsupported texture shader type");
-      return FORMAT_UNKNOWN;
-  }
-}
-
 TextureImageTextureHostOGL::~TextureImageTextureHostOGL()
 {
   MOZ_COUNT_DTOR(TextureImageTextureHostOGL);
@@ -222,7 +201,7 @@ TextureImageTextureHostOGL::UpdateImpl(const SurfaceDescriptor& aImage,
     offset = *aOffset;
   }
   mTexture->DirectUpdate(surf.Get(), updateRegion, offset);
-  mFormat = FormatFromShaderType(mTexture->GetShaderProgramType());
+  mFormat = mTexture->GetTextureFormat();
 
   if (mTexture->InUpdate()) {
     mTexture->EndUpdate();
@@ -240,7 +219,7 @@ TextureImageTextureHostOGL::Lock()
   NS_ASSERTION(mTexture->GetContentType() != gfxASurface::CONTENT_ALPHA,
                 "Image layer has alpha image");
 
-  mFormat = FormatFromShaderType(mTexture->GetShaderProgramType());
+  mFormat = mTexture->GetTextureFormat();
 
   return true;
 }
@@ -304,8 +283,7 @@ SharedTextureHostOGL::SwapTexturesImpl(const SurfaceDescriptor& aImage,
   GLContext::SharedHandleDetails handleDetails;
   if (mSharedHandle && mGL->GetSharedHandleDetails(mShareType, mSharedHandle, handleDetails)) {
     mTextureTarget = handleDetails.mTarget;
-    mShaderProgram = handleDetails.mProgramType;
-    mFormat = FormatFromShaderType(mShaderProgram);
+    mFormat = handleDetails.mTextureFormat;
   }
 }
 
@@ -414,8 +392,8 @@ SurfaceStreamHostOGL::Lock()
       glTexSurf->SetConsumerGL(mGL);
       mTextureHandle = glTexSurf->Texture();
       MOZ_ASSERT(mTextureHandle);
-      mShaderProgram = sharedSurf->HasAlpha() ? RGBALayerProgramType
-                                              : RGBXLayerProgramType;
+      mFormat = sharedSurf->HasAlpha() ? FORMAT_R8G8B8A8
+                                       : FORMAT_R8G8B8X8;
       break;
     }
     case SharedSurfaceType::EGLImageShare: {
@@ -427,8 +405,8 @@ SurfaceStreamHostOGL::Lock()
         toUpload = eglImageSurf->GetPixels();
         MOZ_ASSERT(toUpload);
       } else {
-        mShaderProgram = sharedSurf->HasAlpha() ? RGBALayerProgramType
-                                                : RGBXLayerProgramType;
+        mFormat = sharedSurf->HasAlpha() ? FORMAT_R8G8B8A8
+                                         : FORMAT_R8G8B8X8;
       }
       break;
     }
@@ -447,14 +425,12 @@ SurfaceStreamHostOGL::Lock()
     nsIntSize size(toUpload->GetSize());
     nsIntRect rect(nsIntPoint(0,0), size);
     nsIntRegion bounds(rect);
-    mShaderProgram = mGL->UploadSurfaceToTexture(toUpload,
-                                                 bounds,
-                                                 mUploadTexture,
-                                                 true);
+    mFormat = mGL->UploadSurfaceToTexture(toUpload,
+                                          bounds,
+                                          mUploadTexture,
+                                          true);
     mTextureHandle = mUploadTexture;
   }
-
-  mFormat = FormatFromShaderType(mShaderProgram);
 
   MOZ_ASSERT(mTextureHandle);
   mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mTextureHandle);
@@ -896,7 +872,7 @@ TextureImageTextureHostOGL::GetAsSurface() {
   nsRefPtr<gfxImageSurface> surf = IsValid() ?
     mGL->GetTexImage(mTexture->GetTextureID(),
                      false,
-                     mTexture->GetShaderProgramType())
+                     mTexture->GetTextureFormat())
     : nullptr;
   return surf.forget();
 }
@@ -906,7 +882,7 @@ YCbCrTextureHostOGL::GetAsSurface() {
   nsRefPtr<gfxImageSurface> surf = IsValid() ?
     mGL->GetTexImage(mYTexture->mTexImage->GetTextureID(),
                      false,
-                     mYTexture->mTexImage->GetShaderProgramType())
+                     mYTexture->mTexImage->GetTextureFormat())
     : nullptr;
   return surf.forget();
 }
@@ -916,7 +892,7 @@ SharedTextureHostOGL::GetAsSurface() {
   nsRefPtr<gfxImageSurface> surf = IsValid() ?
     mGL->GetTexImage(GetTextureHandle(),
                      false,
-                     GetShaderProgram())
+                     GetTextureFormat())
     : nullptr;
   return surf.forget();
 }
@@ -926,7 +902,7 @@ SurfaceStreamHostOGL::GetAsSurface() {
   nsRefPtr<gfxImageSurface> surf = IsValid() ?
     mGL->GetTexImage(mTextureHandle,
                      false,
-                     GetShaderProgram())
+                     GetTextureFormat())
     : nullptr;
   return surf.forget();
 }
@@ -936,7 +912,7 @@ TiledTextureHostOGL::GetAsSurface() {
   nsRefPtr<gfxImageSurface> surf = IsValid() ?
     mGL->GetTexImage(mTextureHandle,
                      false,
-                     GetShaderProgram())
+                     GetTextureFormat())
     : nullptr;
   return surf.forget();
 }
@@ -957,7 +933,7 @@ GrallocTextureHostOGL::GetAsSurface() {
   nsRefPtr<gfxImageSurface> surf = IsValid() ?
     gl()->GetTexImage(tex,
                       false,
-                      GetShaderProgram())
+                      GetTextureFormat())
     : nullptr;
   return surf.forget();
 }
