@@ -1150,17 +1150,6 @@ else
 	$(RC) $(RCFLAGS) -r $(DEFINES) $(INCLUDES) $(OUTOPTION)$@ $(_VPATH_SRCS)
 endif
 
-# need 3 separate lines for OS/2
-%:: %.pl
-	$(RM) $@
-	cp $< $@
-	chmod +x $@
-
-%:: %.sh
-	$(RM) $@
-	cp $< $@
-	chmod +x $@
-
 # Cancel these implicit rules
 #
 %: %,v
