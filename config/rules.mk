@@ -1156,6 +1156,8 @@ endif
 
 %: RCS/%,v
 
+%: RCS/%
+
 %: s.%
 
 %: SCCS/s.%
