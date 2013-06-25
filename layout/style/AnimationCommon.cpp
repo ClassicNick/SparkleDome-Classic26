@@ -239,7 +239,7 @@ CommonElementAnimationData::CanAnimatePropertyOnCompositor(const dom::Element *a
     return false;
   }
 
-  nsIFrame* frame = aElement->GetPrimaryFrame();
+  nsIFrame* frame = nsLayoutUtils::GetStyleFrame(aElement);
   if (IsGeometricProperty(aProperty)) {
     if (shouldLog) {
       nsCString message;
@@ -331,8 +331,8 @@ CommonElementAnimationData::CanThrottleTransformChanges(TimeStamp aTime)
 
   // If the nearest scrollable ancestor has overflow:hidden,
   // we don't care about overflow.
-  nsIScrollableFrame* scrollable =
-    nsLayoutUtils::GetNearestScrollableFrame(mElement->GetPrimaryFrame());
+  nsIScrollableFrame* scrollable = nsLayoutUtils::GetNearestScrollableFrame(
+                                     nsLayoutUtils::GetStyleFrame(mElement));
   if (!scrollable) {
     return true;
   }
@@ -350,7 +350,7 @@ CommonElementAnimationData::CanThrottleTransformChanges(TimeStamp aTime)
 bool
 CommonElementAnimationData::CanThrottleAnimation(TimeStamp aTime)
 {
-  nsIFrame* frame = mElement->GetPrimaryFrame();
+  nsIFrame* frame = nsLayoutUtils::GetStyleFrame(mElement);
   if (!frame) {
     return false;
   }
