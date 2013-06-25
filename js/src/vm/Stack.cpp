@@ -1289,6 +1289,20 @@ js::CheckLocalUnaliased(MaybeCheckAliasing checkAliasing, JSScript *script,
 }
 #endif
 
+void
+Activation::setActive(bool active)
+{
+    // Only allowed to deactivate/activate if activation is top.
+    // (Not tested and will probably fail in other situations.)
+    JS_ASSERT(cx()->mainThread().activation_ == this);
+    JS_ASSERT(active != active_);
+    active_ = active;
+
+    // Restore ionTop
+    if (!active && isJit())
+        cx()->mainThread().ionTop = asJit()->prevIonTop();
+}
+
 jit::JitActivation::JitActivation(JSContext *cx, bool firstFrameIsConstructing, bool active)
   : Activation(cx, Jit),
     firstFrameIsConstructing_(firstFrameIsConstructing),

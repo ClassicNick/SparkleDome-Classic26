@@ -1176,6 +1176,10 @@ class Activation
     Activation *prev() const {
         return prev_;
     }
+    bool isActive() const {
+        return active_;
+    }
+    void setActive(bool active = true);
 
     bool isInterpreter() const {
         return kind_ == Interpreter;

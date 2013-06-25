@@ -1147,11 +1147,7 @@ SpecialPowersAPI.prototype = {
   },
 
   snapshotRect: function (win, rect, bgcolor) {
-<<<<<<< HEAD
     return this.snapshotWindowWithOptions(win, rect, bgcolor);
-=======
-    return this.snapshotWindow(win, false, rect, bgcolor);
->>>>>>> 994ad89b823d (Bug 886230 - Don't paint SVG text under DrawWindow(..., DRAWWINDOW_DO_NOT_FLUSH) when frames are dirty. r=roc)
   },
 
   gc: function() {
