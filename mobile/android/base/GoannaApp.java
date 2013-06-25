@@ -2131,8 +2131,6 @@ abstract public class GoannaApp
                 public void run() {
                     ProfileMigrator profileMigrator = new ProfileMigrator(app);
 
-                    profileMigrator.launchDeferredCleanup();
-
                     // Do a migration run on the first start after an upgrade.
                     if (!GoannaApp.sIsUsingCustomProfile &&
                         !profileMigrator.hasMigrationRun()) {
