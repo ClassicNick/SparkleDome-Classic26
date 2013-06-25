@@ -520,6 +520,14 @@ protected:
         return NS_ERROR_FAILURE;
     }
 
+	// Return a blob that wraps a table found within a buffer of font data.
+    // The blob does NOT own its data; caller guarantees that the buffer
+    // will remain valid at least as long as the blob.
+    // Returns null if the specified table is not found.
+    // This method assumes aFontData is valid 'sfnt' data; before using this,
+    // caller is responsible to do any sanitization/validation necessary.
+    hb_blob_t* GetTableFromFontData(const void* aFontData, uint32_t aTableTag);
+	
 protected:
     // Font's unitsPerEm from the 'head' table, if available (will be set to
     // kInvalidUPEM for non-sfnt font formats)
