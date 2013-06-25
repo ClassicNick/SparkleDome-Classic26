@@ -1316,6 +1316,10 @@ abstract public class GoannaApp
     private void initialize() {
         mInitialized = true;
 
+        if (Build.VERSION.SDK_INT >= 11) {
+            // Create the panel and inflate the custom menu.
+            onCreatePanelMenu(Window.FEATURE_OPTIONS_PANEL, null);
+        }
         invalidateOptionsMenu();
 
         Intent intent = getIntent();
