@@ -520,7 +520,7 @@ protected:
         return NS_ERROR_FAILURE;
     }
 
-	// Return a blob that wraps a table found within a buffer of font data.
+    // Return a blob that wraps a table found within a buffer of font data.
     // The blob does NOT own its data; caller guarantees that the buffer
     // will remain valid at least as long as the blob.
     // Returns null if the specified table is not found.
