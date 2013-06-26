@@ -749,8 +749,15 @@ js::gc::MarkRuntime(JSTracer *trc, bool useSavedRoots)
     jit::MarkJitActivations(rt, trc);
 #endif
 
-    for (CompartmentsIter c(rt); !c.done(); c.next())
+    if (!rt->isHeapMinorCollecting()) {
+        /*
+         * All JSCompartment::mark does is mark the globals for compartements
+         * which have been entered. Globals aren't nursery allocated so there's
+         * no need to do this for minor GCs.
+         */
+        for (CompartmentsIter c(rt); !c.done(); c.next())
         c->markRoots(trc);
+    }
 
     /* The embedding can register additional roots here. */
     for (size_t i = 0; i < rt->gcBlackRootTracers.length(); i++) {
