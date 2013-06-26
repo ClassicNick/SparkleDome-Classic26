@@ -739,3 +739,6 @@ pref("media.useAudioChannelService", false);
 
 // Declare compatibility mode with Firefox by default for AMO
 pref("general.useragent.compatMode.firefox", true);
+
+// Turn on the CSP 1.0 parser for Content Security Policy headers
+pref("security.csp.speccompliant", true);
