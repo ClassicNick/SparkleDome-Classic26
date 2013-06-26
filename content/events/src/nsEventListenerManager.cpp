@@ -125,7 +125,7 @@ nsEventListenerManager::nsEventListenerManager(EventTarget* aTarget) :
   NS_ASSERTION(aTarget, "unexpected null pointer");
 
   if (mIsMainThreadELM)
-    ++sCreatedCount;
+    ++sMainThreadCreatedCount;
 
   // enable logging for XSS
 #ifdef PR_LOGGING
