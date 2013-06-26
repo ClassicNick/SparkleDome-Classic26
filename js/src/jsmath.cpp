@@ -435,7 +435,7 @@ js::math_fround(JSContext *cx, unsigned argc, Value *vp)
     }
 
     double x;
-    if (!ToNumber(cx, args[0], &x))
+    if (!ToNumber(cx, args.handleAt(0), &x))
         return false;
 
     float f = x;
@@ -1250,7 +1250,7 @@ js::math_hypot(JSContext *cx, unsigned argc, Value *vp)
 
     for (unsigned i = 0; i < args.length(); i++) {
         double x;
-        if (!ToNumber(cx, args[i], &x))
+        if (!ToNumber(cx, args.handleAt(i), &x))
             return false;
 
         isInfinite |= mozilla::IsInfinite(x);
