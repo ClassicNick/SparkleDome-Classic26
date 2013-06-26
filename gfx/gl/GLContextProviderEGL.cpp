@@ -118,8 +118,6 @@ public:
 
 #include "nsIWidget.h"
 
-using namespace mozilla::gfx;
-
 #if defined(MOZ_PLATFORM_MAEMO) || defined(MOZ_WIDGET_GONK)
 static bool gUseBackingSurface = true;
 #else
@@ -989,7 +987,7 @@ bool GLContextEGL::GetSharedHandleDetails(SharedTextureShareType shareType,
         SurfaceTextureWrapper* surfaceWrapper = reinterpret_cast<SurfaceTextureWrapper*>(wrapper);
 
         details.mTarget = LOCAL_GL_TEXTURE_EXTERNAL;
-        details.mTextureFormat = FORMAT_R8G8B8A8;
+        details.mProgramType = RGBALayerExternalProgramType;
         surfaceWrapper->SurfaceTexture()->GetTransformMatrix(details.mTextureTransform);
         break;
     }
@@ -997,7 +995,7 @@ bool GLContextEGL::GetSharedHandleDetails(SharedTextureShareType shareType,
 
     case SharedHandleType::Image:
         details.mTarget = LOCAL_GL_TEXTURE_2D;
-        details.mTextureFormat = FORMAT_R8G8B8A8;
+        details.mProgramType = RGBALayerProgramType;
         break;
 
     default:
@@ -1125,21 +1123,21 @@ public:
 
         if (gUseBackingSurface) {
             if (mUpdateFormat != gfxASurface::ImageFormatARGB32) {
-                mTextureFormat = FORMAT_R8G8B8X8;
+                mShaderType = RGBXLayerProgramType;
             } else {
-                mTextureFormat = FORMAT_R8G8B8A8;
+                mShaderType = RGBALayerProgramType;
             }
             Resize(aSize);
         } else {
             if (mUpdateFormat == gfxASurface::ImageFormatRGB16_565) {
-                mTextureFormat = FORMAT_R8G8B8X8;
+                mShaderType = RGBXLayerProgramType;
             } else if (mUpdateFormat == gfxASurface::ImageFormatRGB24) {
                 // RGB24 means really RGBX for Thebes, which means we have to
                 // use the right shader and ignore the uninitialized alpha
                 // value.
-                mTextureFormat = FORMAT_R8G8B8X8;
+                mShaderType = BGRXLayerProgramType;
             } else {
-                mTextureFormat = FORMAT_R8G8B8A8;
+                mShaderType = BGRALayerProgramType;
             }
         }
     }
@@ -1304,7 +1302,7 @@ public:
             region = aRegion;
         }
 
-        mTextureFormat =
+        mShaderType =
           mGLContext->UploadSurfaceToTexture(aSurf,
                                               region,
                                               mTexture,
