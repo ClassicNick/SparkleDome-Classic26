@@ -194,7 +194,7 @@ public class AwesomeBar extends GoannaActivity
         mText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER || GamepadUtils.isActionKey(event)) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     if (event.getAction() != KeyEvent.ACTION_DOWN)
                         return true;
 
@@ -437,7 +437,8 @@ public class AwesomeBar extends GoannaActivity
             keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
             keyCode == KeyEvent.KEYCODE_DEL ||
             keyCode == KeyEvent.KEYCODE_VOLUME_UP ||
-            keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
+            GamepadUtils.isActionKey(event)) {
             return super.onKeyDown(keyCode, event);
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
              mText.setText("");

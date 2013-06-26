@@ -138,7 +138,6 @@ public class AllPagesTab extends AwesomeBarTab implements GoannaEventListener {
                      handleItemClick(parent, view, position, id);
                 }
             });
-            list.setOnKeyListener(GamepadUtils.getListItemClickDispatcher());
 
             AwesomeBarCursorAdapter adapter = getCursorAdapter();
             list.setAdapter(adapter);
