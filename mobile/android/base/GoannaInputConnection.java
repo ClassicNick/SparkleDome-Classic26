@@ -125,16 +125,20 @@ class GoannaInputConnection
             }
         }
 
-        public void runOnIcThread(final Handler uiHandler,
-                                  final GoannaEditableClient client,
-                                  final Runnable runnable) {
+        public void sendEventFromUiThread(final Handler uiHandler,
+                                          final GoannaEditableClient client,
+                                          final GoannaEvent event) {
             final Handler icHandler = client.getInputConnectionHandler();
             if (icHandler.getLooper() == uiHandler.getLooper()) {
-                // IC thread is UI thread; safe to run directly
-                runnable.run();
+                // IC thread is UI thread; safe to send event directly
+                client.sendEvent(event);
                 return;
             }
-            runOnIcThread(icHandler, runnable);
+            runOnIcThread(icHandler, new Runnable() {
+                @Override public void run() {
+                    client.sendEvent(event);
+                }
+            });
         }
 
         public Editable getEditableForUiThread(final Handler uiHandler,
@@ -794,7 +798,8 @@ class GoannaInputConnection
 
         View view = getView();
         if (view == null) {
-            mEditableClient.sendEvent(GoannaEvent.createKeyEvent(event, 0));
+            InputThreadUtils.sInstance.sendEventFromUiThread(ThreadUtils.getUiHandler(),
+                mEditableClient, GoannaEvent.createKeyEvent(event, 0));
             return true;
         }
 
@@ -811,7 +816,7 @@ class GoannaInputConnection
         if (skip ||
             (down && !keyListener.onKeyDown(view, uiEditable, keyCode, event)) ||
             (!down && !keyListener.onKeyUp(view, uiEditable, keyCode, event))) {
-            mEditableClient.sendEvent(
+            InputThreadUtils.sInstance.sendEventFromUiThread(uiHandler, mEditableClient,
                 GoannaEvent.createKeyEvent(event, TextKeyListener.getMetaState(uiEditable)));
             if (skip && down) {
                 // Usually, the down key listener call above adjusts meta states for us.

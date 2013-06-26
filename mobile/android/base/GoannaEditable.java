@@ -531,18 +531,8 @@ final class GoannaEditable
     @Override
     public void sendEvent(final GoannaEvent event) {
         if (DEBUG) {
+            assertOnIcThread();
             Log.d(LOGTAG, "sendEvent(" + event + ")");
-        }
-        if (!onIcThread()) {
-            // Events may get dispatched to the main thread;
-            // reroute to our IC thread instead
-            mIcRunHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    sendEvent(event);
-                }
-            });
-            return;
         }
         /*
            We are actually sending two events to Goanna here,
@@ -844,8 +834,12 @@ final class GoannaEditable
         if (DEBUG) {
             // GoannaEditableListener methods should all be called from the Goanna thread
             ThreadUtils.assertOnGoannaThread();
-            Log.d(LOGTAG, "onTextChange(\"" + text + "\", " + start + ", " +
-                          unboundedOldEnd + ", " + unboundedNewEnd + ")");
+            StringBuilder sb = new StringBuilder("onTextChange(");
+            debugAppend(sb, text);
+            sb.append(", ").append(start).append(", ")
+                .append(unboundedOldEnd).append(", ")
+                .append(unboundedNewEnd).append(")");
+            Log.d(LOGTAG, sb.toString());
         }
         if (start < 0 || start > unboundedOldEnd) {
             throw new IllegalArgumentException("invalid text notification range: " +
