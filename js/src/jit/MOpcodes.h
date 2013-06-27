@@ -65,6 +65,7 @@ namespace jit {
     _(Div)                                                                  \
     _(Mod)                                                                  \
     _(Concat)                                                               \
+    _(ParConcat)                                                            \
     _(CharCodeAt)                                                           \
     _(FromCharCode)                                                         \
     _(Return)                                                               \
