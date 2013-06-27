@@ -708,8 +708,25 @@ PerThreadData::PerThreadData(JSRuntime *runtime)
     ionStackLimit(0),
     activation_(NULL),
     asmJSActivationStack_(NULL),
+    dtoaState(NULL),
     suppressGC(0)
 {}
+
+PerThreadData::~PerThreadData()
+{
+    if (dtoaState)
+        js_DestroyDtoaState(dtoaState);
+}
+
+bool
+PerThreadData::init()
+{
+    dtoaState = js_NewDtoaState();
+    if (!dtoaState)
+        return false;
+
+    return true;
+}
 
 JSRuntime::JSRuntime(JSUseHelperThreads useHelperThreads)
   : mainThread(this),
@@ -868,7 +885,6 @@ JSRuntime::JSRuntime(JSUseHelperThreads useHelperThreads)
     numGrouping(0),
 #endif
     mathCache_(NULL),
-    dtoaState(NULL),
     activeCompilations(0),
     trustedPrincipals_(NULL),
     wrapObjectCallback(TransparentObjectWrapper),
@@ -913,6 +929,9 @@ JSRuntime::init(uint32_t maxbytes)
         return false;
 #endif
 
+    if (!mainThread.init())
+        return false;
+
     js::TlsPerThreadData.set(&mainThread);
 
     if (!js_InitGC(this, maxbytes))
@@ -948,10 +967,6 @@ JSRuntime::init(uint32_t maxbytes)
         return false;
 
     if (!InitRuntimeNumberState(this))
-        return false;
-
-    dtoaState = js_NewDtoaState();
-    if (!dtoaState)
         return false;
 
     dateTimeInfo.updateTimeZoneAdjustment();
@@ -1020,9 +1035,6 @@ JSRuntime::~JSRuntime()
     FinishRuntimeNumberState(this);
 #endif
     FinishAtoms(this);
-
-    if (dtoaState)
-        js_DestroyDtoaState(dtoaState);
 
     js_FinishGC(this);
 #ifdef JS_THREADSAFE
