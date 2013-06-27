@@ -2392,7 +2392,7 @@ nsChildView::GetDocumentAccessible()
 
   // need to fetch the accessible anew, because it has gone away.
   // cache the accessible in our weak ptr
-  nsRefPtr<a11y::Accessible> acc = GetAccessible();
+  nsRefPtr<a11y::Accessible> acc = GetRootAccessible();
   mAccessible = do_GetWeakReference(static_cast<nsIAccessible *>(acc.get()));
 
   return acc.forget();
