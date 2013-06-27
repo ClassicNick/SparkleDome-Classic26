@@ -99,7 +99,7 @@ private:
     mappable->munmap(buf, length);
   }
 
-  Mappable *mappable;
+  mozilla::RefPtr<Mappable> mappable;
 };
 
 
@@ -237,7 +237,6 @@ CustomElf::~CustomElf()
    * Android NDK before r6b doesn't do that. Our wrapped cxa_finalize only
    * calls destructors once, so call it in all cases. */
   ElfLoader::__wrap_cxa_finalize(this);
-  delete mappable;
   ElfLoader::Singleton.Forget(this);
 }
 
