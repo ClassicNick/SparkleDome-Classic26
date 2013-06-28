@@ -1166,7 +1166,7 @@ public class BrowserToolbar implements Tabs.OnTabsChangedListener,
         if (!mHasSoftMenuButton)
             return false;
 
-        if (mMenuPopup.isShowing())
+        if (mMenuPopup != null && mMenuPopup.isShowing())
             mMenuPopup.dismiss();
 
         return true;
