@@ -171,6 +171,7 @@ webidl_files = \
   LocalMediaStream.webidl \
   Location.webidl \
   MediaError.webidl \
+  MediaSource.webidl \
   MediaStream.webidl \
   MediaStreamAudioDestinationNode.webidl \
   MediaStreamEvent.webidl \
@@ -223,6 +224,8 @@ webidl_files = \
   ScriptProcessorNode.webidl \
   ScrollAreaEvent.webidl \
   SimpleGestureEvent.webidl \
+  SourceBufferList.webidl \
+  SourceBuffer.webidl \
   StyleSheet.webidl \
   SVGAElement.webidl \
   SVGAltGlyphElement.webidl \
