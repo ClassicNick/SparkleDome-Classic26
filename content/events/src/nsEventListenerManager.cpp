@@ -107,7 +107,7 @@ MutationBitForEventType(uint32_t aEventType)
   return 0;
 }
 
-uint32_t nsEventListenerManager::sCreatedCount = 0;
+uint32_t nsEventListenerManager::sMainThreadCreatedCount = 0;
 
 nsEventListenerManager::nsEventListenerManager(EventTarget* aTarget) :
   mMayHavePaintEventListener(false),
@@ -132,7 +132,6 @@ nsEventListenerManager::nsEventListenerManager(EventTarget* aTarget) :
   if (!gXssPRLog)
     gXssPRLog = PR_NewLogModule("XSS");
 #endif
-
 }
 
 nsEventListenerManager::~nsEventListenerManager() 
