@@ -124,6 +124,11 @@ bool useConvReg()
     return has32DP();
 }
 
+bool hasIDIV()
+{
+    return js::jit::getFlags() & HWCAP_IDIVA;
+}
+
 } // namespace jit
 } // namespace js
 
