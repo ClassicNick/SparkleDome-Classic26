@@ -2856,8 +2856,7 @@ IsCacheableScopeChain(JSObject *scopeChain, JSObject *holder)
         }
     }
 
-    MOZ_ASSUME_NOT_REACHED("Shouldn't get here");
-    return false;
+    MOZ_ASSUME_NOT_REACHED();
 }
 
 JSObject *

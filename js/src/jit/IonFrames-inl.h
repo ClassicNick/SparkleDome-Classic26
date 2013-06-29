@@ -47,7 +47,6 @@ SizeOfFramePrefix(FrameType type)
       default:
         MOZ_ASSUME_NOT_REACHED("unknown frame type");
     }
-    return 0;
 }
 
 inline IonCommonFrameLayout *

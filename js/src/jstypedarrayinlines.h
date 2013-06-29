@@ -151,7 +151,6 @@ TypedArray::slotWidth(int atype) {
         return 8;
     default:
         MOZ_ASSUME_NOT_REACHED("invalid typed array type");
-        return 0;
     }
 }
 

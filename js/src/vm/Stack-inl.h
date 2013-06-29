@@ -618,7 +618,6 @@ AbstractFramePtr::isDebuggerFrame() const
 #else
     MOZ_ASSUME_NOT_REACHED("Invalid frame");
 #endif
-    return false;
 }
 inline JSScript *
 AbstractFramePtr::script() const

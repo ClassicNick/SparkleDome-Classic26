@@ -738,7 +738,6 @@ MacroAssemblerARM::ma_cmp(Register src1, Operand op, Condition c)
         break;
       default:
         MOZ_ASSUME_NOT_REACHED("trying to compare FP and integer registers");
-        break;
     }
 }
 void
@@ -812,8 +811,6 @@ MacroAssemblerARM::ma_check_mul(Register src1, Register src2, Register dest, Con
     }
 
     MOZ_ASSUME_NOT_REACHED("Condition NYI");
-    return Always;
-
 }
 
 Assembler::Condition
@@ -832,7 +829,6 @@ MacroAssemblerARM::ma_check_mul(Register src1, Imm32 imm, Register dest, Conditi
     }
 
     MOZ_ASSUME_NOT_REACHED("Condition NYI");
-    return Always;
 }
 
 void

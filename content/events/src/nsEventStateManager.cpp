@@ -1496,7 +1496,6 @@ nsEventStateManager::DispatchCrossProcessEvent(nsEvent* aEvent,
   }
   default: {
     MOZ_CRASH("Attempt to send non-whitelisted event?");
-    return false;
   }
   }
 }
@@ -2521,7 +2520,6 @@ nsEventStateManager::DispatchLegacyMouseScrollEvents(nsIFrame* aTargetFrame,
 
     default:
       MOZ_CRASH("Invalid deltaMode value comes");
-      return;
   }
 
   // Send the legacy events in following order:
@@ -2835,7 +2833,6 @@ nsEventStateManager::DoScrollText(nsIScrollableFrame* aScrollableFrame,
       break;
     default:
       MOZ_CRASH("Invalid deltaMode value comes");
-      return;
   }
 
   // We shouldn't scroll more one page at once except when over one page scroll
@@ -2880,7 +2877,6 @@ nsEventStateManager::DoScrollText(nsIScrollableFrame* aScrollableFrame,
       break;
     default:
       MOZ_CRASH("Invalid scrollType value comes");
-      return;
   }
 
   nsIntPoint overflow;

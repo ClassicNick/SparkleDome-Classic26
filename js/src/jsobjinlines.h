@@ -1269,7 +1269,6 @@ ObjectClassIs(HandleObject obj, ESClassValue classValue, JSContext *cx)
       case ESClass_Date: return obj->is<DateObject>();
     }
     MOZ_ASSUME_NOT_REACHED("bad classValue");
-    return false;
 }
 
 inline bool

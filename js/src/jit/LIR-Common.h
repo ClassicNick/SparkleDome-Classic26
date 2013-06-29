@@ -4505,7 +4505,6 @@ class LPhi : public LInstruction
     }
     LDefinition *getTemp(size_t index) {
         MOZ_ASSUME_NOT_REACHED("no temps");
-        return NULL;
     }
     void setTemp(size_t index, const LDefinition &temp) {
         MOZ_ASSUME_NOT_REACHED("no temps");
@@ -4515,7 +4514,6 @@ class LPhi : public LInstruction
     }
     MBasicBlock *getSuccessor(size_t i) const {
         MOZ_ASSUME_NOT_REACHED("no successors");
-        return NULL;
     }
     void setSuccessor(size_t i, MBasicBlock *) {
         MOZ_ASSUME_NOT_REACHED("no successors");
@@ -4827,7 +4825,6 @@ class LAsmJSCall : public LInstruction
     }
     MBasicBlock *getSuccessor(size_t i) const {
         MOZ_ASSUME_NOT_REACHED("no successors");
-        return NULL;
     }
     void setSuccessor(size_t i, MBasicBlock *) {
         MOZ_ASSUME_NOT_REACHED("no successors");

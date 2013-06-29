@@ -416,7 +416,6 @@ class Type
             return MIRType_None;
         }
         MOZ_ASSUME_NOT_REACHED("Invalid Type");
-        return MIRType_None;
     }
 
     const char *toChars() const {
@@ -432,7 +431,6 @@ class Type
           case Unknown:   return "unknown";
         }
         MOZ_ASSUME_NOT_REACHED("Invalid Type");
-        return "";
     }
 };
 
@@ -472,7 +470,6 @@ class RetType
           case Double: return AsmJSModule::Return_Double;
         }
         MOZ_ASSUME_NOT_REACHED("Unexpected return type");
-        return AsmJSModule::Return_Void;
     }
     MIRType toMIRType() const {
         switch (which_) {
@@ -481,7 +478,6 @@ class RetType
           case Double: return MIRType_Double;
         }
         MOZ_ASSUME_NOT_REACHED("Unexpected return type");
-        return MIRType_None;
     }
     bool operator==(RetType rhs) const { return which_ == rhs.which_; }
     bool operator!=(RetType rhs) const { return which_ != rhs.which_; }
@@ -497,7 +493,6 @@ operator<=(Type lhs, RetType rhs)
       case RetType::Void:   return lhs == Type::Void;
     }
     MOZ_ASSUME_NOT_REACHED("Unexpected rhs type");
-    return false;
 }
 
 // Represents the subset of Type that can be used as a variable or
@@ -571,7 +566,6 @@ operator<=(Type lhs, VarType rhs)
       case VarType::Double: return lhs.isDouble();
     }
     MOZ_ASSUME_NOT_REACHED("Unexpected rhs type");
-    return false;
 }
 
 // Passed from parent expressions to child expressions to indicate if and how
@@ -775,7 +769,6 @@ TypedArrayLoadType(ArrayBufferView::ViewType viewType)
       default:;
     }
     MOZ_ASSUME_NOT_REACHED("Unexpected array type");
-    return Type();
 }
 
 enum ArrayStoreEnum {
@@ -800,7 +793,6 @@ TypedArrayStoreType(ArrayBufferView::ViewType viewType)
       default:;
     }
     MOZ_ASSUME_NOT_REACHED("Unexpected array type");
-    return ArrayStore_Doublish;
 }
 
 /*****************************************************************************/
@@ -3867,7 +3859,6 @@ IsValidIntMultiplyConstant(ParseNode *expr)
     }
 
     MOZ_ASSUME_NOT_REACHED("Bad literal");
-    return false;
 }
 
 static bool

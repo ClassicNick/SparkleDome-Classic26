@@ -116,7 +116,6 @@ FormatFromShaderType(ShaderProgramType aShaderType)
       return FORMAT_B8G8R8X8;
     default:
       MOZ_CRASH("Unsupported texture shader type");
-      return FORMAT_UNKNOWN;
   }
 }
 
@@ -439,7 +438,6 @@ SurfaceStreamHostOGL::Lock()
     }
     default:
       MOZ_CRASH("Invalid SharedSurface type.");
-      return false;
   }
 
   if (toUpload) {

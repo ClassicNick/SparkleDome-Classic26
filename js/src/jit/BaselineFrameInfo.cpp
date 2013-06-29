@@ -47,7 +47,6 @@ FrameInfo::sync(StackValue *val)
         break;
       default:
         MOZ_ASSUME_NOT_REACHED("Invalid kind");
-        break;
     }
 
     val->setStack();

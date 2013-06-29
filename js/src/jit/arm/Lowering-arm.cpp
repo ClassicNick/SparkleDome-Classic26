@@ -493,7 +493,6 @@ bool
 LIRGeneratorARM::visitStoreTypedArrayElementStatic(MStoreTypedArrayElementStatic *ins)
 {
     MOZ_ASSUME_NOT_REACHED("NYI");
-    return true;
 }
 
 //__aeabi_uidiv

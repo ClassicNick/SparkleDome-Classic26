@@ -1106,7 +1106,6 @@ IonBuilder::snoopControlFlow(JSOp op)
           default:
             // Hard assert for now - make an error later.
             MOZ_ASSUME_NOT_REACHED("unknown goto case");
-            break;
         }
         break;
       }
@@ -1118,7 +1117,6 @@ IonBuilder::snoopControlFlow(JSOp op)
         // We should never reach an IFNE, it's a stopAt point, which will
         // trigger closing the loop.
         MOZ_ASSUME_NOT_REACHED("we should never reach an ifne!");
-        return ControlStatus_Error;
 
       default:
         break;
@@ -1407,7 +1405,6 @@ IonBuilder::inspectOpcode(JSOp op)
       case JSOP_LOOPHEAD:
         // JSOP_LOOPHEAD is handled when processing the loop header.
         MOZ_ASSUME_NOT_REACHED("JSOP_LOOPHEAD outside loop");
-        return true;
 
       case JSOP_GETELEM:
       case JSOP_CALLELEM:
@@ -1609,7 +1606,6 @@ IonBuilder::processCfgEntry(CFGState &state)
       default:
         MOZ_ASSUME_NOT_REACHED("unknown cfgstate");
     }
-    return ControlStatus_Error;
 }
 
 IonBuilder::ControlStatus
@@ -2257,7 +2253,6 @@ IonBuilder::processSwitchBreak(JSOp op)
         break;
       default:
         MOZ_ASSUME_NOT_REACHED("Unexpected switch state.");
-        return ControlStatus_Error;
     }
 
     *breaks = new DeferredEdge(current, *breaks);
@@ -2334,7 +2329,6 @@ IonBuilder::maybeLoop(JSOp op, jssrcnote *sn)
 
       default:
         MOZ_ASSUME_NOT_REACHED("unexpected opcode");
-        return ControlStatus_Error;
     }
 
     return ControlStatus_None;
@@ -2365,7 +2359,6 @@ IonBuilder::assertValidLoopHeadOp(jsbytecode *pc)
 
           default:
             MOZ_ASSUME_NOT_REACHED("JSOP_LOOPHEAD unexpected source note");
-            return;
         }
 
         // Make sure this loop goes to the same ifne as the loop header's
@@ -3148,7 +3141,6 @@ IonBuilder::jsop_ifeq(JSOp op)
 
       default:
         MOZ_ASSUME_NOT_REACHED("unexpected source note type");
-        break;
     }
 
     // Switch to parsing the true branch. Note that no PC update is needed,
@@ -3178,7 +3170,6 @@ IonBuilder::processReturn(JSOp op)
       default:
         def = NULL;
         MOZ_ASSUME_NOT_REACHED("unknown return op");
-        break;
     }
 
     if (instrumentedProfiling())
@@ -3268,7 +3259,6 @@ IonBuilder::jsop_bitop(JSOp op)
 
       default:
         MOZ_ASSUME_NOT_REACHED("unexpected bitop");
-        return false;
     }
 
     current->add(ins);
@@ -3326,7 +3316,6 @@ IonBuilder::jsop_binary(JSOp op, MDefinition *left, MDefinition *right)
 
       default:
         MOZ_ASSUME_NOT_REACHED("unexpected binary opcode");
-        return false;
     }
 
     bool overflowed = types::HasOperationOverflowed(script(), pc);
@@ -6097,7 +6086,6 @@ jit::TypeSetIncludes(types::TypeSet *types, MIRType input, types::TypeSet *input
 
       default:
         MOZ_ASSUME_NOT_REACHED("Bad input type");
-        return false;
     }
 }
 
@@ -6549,7 +6537,6 @@ IonBuilder::jsop_getelem_typed(int arrayType)
             break;
           default:
             MOZ_ASSUME_NOT_REACHED("Unknown typed array type");
-            return false;
         }
 
         // Get the length.
@@ -6596,7 +6583,6 @@ IonBuilder::jsop_getelem_typed(int arrayType)
             break;
           default:
             MOZ_ASSUME_NOT_REACHED("Unknown typed array type");
-            return false;
         }
 
         // Assume we will read out-of-bound values. In this case the

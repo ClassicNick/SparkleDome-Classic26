@@ -501,7 +501,6 @@ BaselineScript::icEntryFromPCOffset(uint32_t pcOffset)
             return icEntry(i);
     }
     MOZ_ASSUME_NOT_REACHED("Invalid PC offset for IC entry.");
-    return icEntry(mid);
 }
 
 ICEntry &
@@ -647,7 +646,6 @@ BaselineScript::nativeCodeForPC(JSScript *script, jsbytecode *pc, PCMappingSlotI
     }
 
     MOZ_ASSUME_NOT_REACHED("Invalid pc");
-    return NULL;
 }
 
 jsbytecode *
@@ -692,7 +690,6 @@ BaselineScript::pcForReturnOffset(JSScript *script, uint32_t nativeOffset)
     }
 
     MOZ_ASSUME_NOT_REACHED("Invalid pc");
-    return NULL;
 }
 
 jsbytecode *

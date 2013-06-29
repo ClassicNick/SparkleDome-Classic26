@@ -307,7 +307,6 @@ MacroAssembler::loadFromTypedArray(int arrayType, const T &src, AnyRegister dest
         break;
       default:
         MOZ_ASSUME_NOT_REACHED("Invalid typed array type");
-        break;
     }
 }
 
@@ -363,7 +362,6 @@ MacroAssembler::loadFromTypedArray(int arrayType, const T &src, const ValueOpera
         break;
       default:
         MOZ_ASSUME_NOT_REACHED("Invalid typed array type");
-        break;
     }
 }
 
@@ -1257,7 +1255,6 @@ MacroAssembler::PushEmptyRooted(VMFunction::RootType rootType)
     switch (rootType) {
       case VMFunction::RootNone:
         MOZ_ASSUME_NOT_REACHED("Handle must have root type");
-        break;
       case VMFunction::RootObject:
       case VMFunction::RootString:
       case VMFunction::RootPropertyName:
@@ -1278,7 +1275,6 @@ MacroAssembler::popRooted(VMFunction::RootType rootType, Register cellReg,
     switch (rootType) {
       case VMFunction::RootNone:
         MOZ_ASSUME_NOT_REACHED("Handle must have root type");
-        break;
       case VMFunction::RootObject:
       case VMFunction::RootString:
       case VMFunction::RootPropertyName:

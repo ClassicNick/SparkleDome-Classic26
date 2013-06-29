@@ -1749,7 +1749,6 @@ GLContext::ReadPixelsIntoImageSurface(gfxImageSurface* dest)
 
         default:
             MOZ_CRASH("Bad format.");
-            return;
     }
     MOZ_ASSERT(dest->Stride() == dest->Width() * destPixelSize);
 
@@ -1783,7 +1782,6 @@ GLContext::ReadPixelsIntoImageSurface(gfxImageSurface* dest)
             }
             default: {
                 MOZ_CRASH("Bad read format.");
-                return;
             }
         }
 
@@ -1805,7 +1803,6 @@ GLContext::ReadPixelsIntoImageSurface(gfxImageSurface* dest)
             }
             default: {
                 MOZ_CRASH("Bad read type.");
-                return;
             }
         }
 
