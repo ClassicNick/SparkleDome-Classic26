@@ -2495,8 +2495,7 @@ class TypedArrayTemplate
             break;
           }
           default:
-            JS_NOT_REACHED("copyFrom with a TypedArray of unknown type");
-            break;
+            MOZ_NOT_REACHED("copyFrom with a TypedArray of unknown type");
         }
 
         return true;
@@ -2574,7 +2573,7 @@ class TypedArrayTemplate
             break;
           }
           default:
-            JS_NOT_REACHED("copyFromWithOverlap with a TypedArray of unknown type");
+            MOZ_ASSUME_NOT_REACHED("copyFromWithOverlap with a TypedArray of unknown type");
             break;
         }
 
@@ -3937,7 +3936,7 @@ js::IsTypedArrayConstructor(const Value &v, uint32_t type)
       case TypedArray::TYPE_UINT8_CLAMPED:
         return IsNativeFunction(v, Uint8ClampedArray::class_constructor);
     }
-    JS_NOT_REACHED("unexpected typed array type");
+    MOZ_ASSUME_NOT_REACHED("unexpected typed array type");
     return false;
 }
 
@@ -4131,7 +4130,7 @@ JS_GetArrayBufferViewType(JSObject *obj)
         return static_cast<JSArrayBufferViewType>(TypedArray::type(obj));
     else if (obj->is<DataViewObject>())
         return ArrayBufferView::TYPE_DATAVIEW;
-    JS_NOT_REACHED("invalid ArrayBufferView type");
+    MOZ_ASSUME_NOT_REACHED("invalid ArrayBufferView type");
     return ArrayBufferView::TYPE_MAX;
 }
 

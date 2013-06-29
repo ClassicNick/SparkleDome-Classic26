@@ -600,7 +600,7 @@ CodeGenerator::visitIntToString(LIntToString *lir)
                         StoreRegisterTo(output));
         break;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
     if (!ool)
         return false;
@@ -641,7 +641,7 @@ CodeGenerator::visitDoubleToString(LDoubleToString *lir)
                         StoreRegisterTo(output));
         break;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
     if (!ool)
         return false;
@@ -3550,7 +3550,7 @@ CodeGenerator::visitMathFunctionD(LMathFunctionD *ins)
         funptr = JS_FUNC_TO_DATA_PTR(void *, js::math_cbrt_impl);
         break;
       default:
-        JS_NOT_REACHED("Unknown math function");
+        MOZ_ASSUME_NOT_REACHED("Unknown math function");
     }
 
     masm.callWithABI(funptr, MacroAssembler::DOUBLE);
@@ -3612,7 +3612,7 @@ CodeGenerator::visitBinaryV(LBinaryV *lir)
         return callVM(UrshInfo, lir);
 
       default:
-        JS_NOT_REACHED("Unexpected binary op");
+        MOZ_ASSUME_NOT_REACHED("Unexpected binary op");
         return false;
     }
 }
@@ -3760,7 +3760,7 @@ CodeGenerator::visitCompareVM(LCompareVM *lir)
             return callVM(GeInfo, lir);
 
           default:
-            JS_NOT_REACHED("Unexpected compare op");
+            MOZ_ASSUME_NOT_REACHED("Unexpected compare op");
             return false;
         }
 
@@ -3791,12 +3791,12 @@ CodeGenerator::visitCompareVM(LCompareVM *lir)
             return callVM(ParGeInfo, lir);
 
           default:
-            JS_NOT_REACHED("Unexpected compare op");
+            MOZ_ASSUME_NOT_REACHED("Unexpected compare op");
             return false;
         }
     }
 
-    JS_NOT_REACHED("Unexpected exec mode");
+    MOZ_ASSUME_NOT_REACHED("Unexpected exec mode");
 }
 
 bool
@@ -4162,7 +4162,7 @@ IonCompartment::generateStringConcatStub(JSContext *cx, ExecutionMode mode)
         masm.pop(temp1);
         break;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
 
     // Store lengthAndFlags.
@@ -4207,7 +4207,7 @@ IonCompartment::generateStringConcatStub(JSContext *cx, ExecutionMode mode)
         masm.pop(temp1);
         break;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
 
     // Set lengthAndFlags.
@@ -5756,7 +5756,7 @@ CodeGenerator::addGetPropertyCache(LInstruction *ins, RegisterSet liveRegs, Regi
         return addCache(ins, allocateCache(cache));
       }
       default:
-        JS_NOT_REACHED("Bad execution mode");
+        MOZ_ASSUME_NOT_REACHED("Bad execution mode");
     }
 }
 
@@ -6103,7 +6103,7 @@ CodeGenerator::visitBitOpV(LBitOpV *lir)
       default:
         break;
     }
-    JS_NOT_REACHED("unexpected bitop");
+    MOZ_ASSUME_NOT_REACHED("unexpected bitop");
     return false;
 }
 
@@ -6934,7 +6934,7 @@ CodeGenerator::visitFunctionBoundary(LFunctionBoundary *lir)
             return true;
 
         default:
-            JS_NOT_REACHED("invalid LFunctionBoundary type");
+            MOZ_ASSUME_NOT_REACHED("invalid LFunctionBoundary type");
     }
 }
 

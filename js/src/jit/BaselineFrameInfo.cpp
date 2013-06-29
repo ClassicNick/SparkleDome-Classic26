@@ -46,7 +46,7 @@ FrameInfo::sync(StackValue *val)
         masm.pushValue(val->constant());
         break;
       default:
-        JS_NOT_REACHED("Invalid kind");
+        MOZ_ASSUME_NOT_REACHED("Invalid kind");
         break;
     }
 
@@ -103,7 +103,7 @@ FrameInfo::popValue(ValueOperand dest)
         masm.moveValue(val->reg(), dest);
         break;
       default:
-        JS_NOT_REACHED("Invalid kind");
+        MOZ_ASSUME_NOT_REACHED("Invalid kind");
     }
 
     // masm.popValue already adjusted the stack pointer, don't do it twice.
@@ -139,7 +139,7 @@ FrameInfo::popRegsAndSync(uint32_t uses)
         break;
       }
       default:
-        JS_NOT_REACHED("Invalid uses");
+        MOZ_ASSUME_NOT_REACHED("Invalid uses");
     }
 }
 
@@ -176,7 +176,7 @@ FrameInfo::assertValidState(const BytecodeInfo &info)
                 JS_ASSERT(!usedR1);
                 usedR1 = true;
             } else {
-                JS_NOT_REACHED("Invalid register");
+                MOZ_ASSUME_NOT_REACHED("Invalid register");
             }
         }
     }

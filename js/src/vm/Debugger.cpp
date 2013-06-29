@@ -630,7 +630,7 @@ Debugger::slowPathOnLeaveFrame(JSContext *cx, AbstractFramePtr frame, bool frame
         return false;
 
       default:
-        JS_NOT_REACHED("bad final trap status");
+        MOZ_ASSUME_NOT_REACHED("bad final trap status");
     }
 }
 
@@ -828,7 +828,7 @@ Debugger::newCompletionValue(JSContext *cx, JSTrapStatus status, Value value_,
         return true;
 
       default:
-        JS_NOT_REACHED("bad status passed to Debugger::newCompletionValue");
+        MOZ_ASSUME_NOT_REACHED("bad status passed to Debugger::newCompletionValue");
     }
 
     /* Common tail for JSTRAP_RETURN and JSTRAP_THROW. */
@@ -1364,7 +1364,7 @@ Debugger::slowPathOnNewGlobalObject(JSContext *cx, Handle<GlobalObject *> global
         return false;
 
       default:
-        JS_NOT_REACHED("bad status from Debugger::fireNewGlobalObject");
+        MOZ_ASSUME_NOT_REACHED("bad status from Debugger::fireNewGlobalObject");
     }
 }
 

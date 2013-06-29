@@ -415,7 +415,7 @@ class Type
           case Unknown:
             return MIRType_None;
         }
-        JS_NOT_REACHED("Invalid Type");
+        MOZ_ASSUME_NOT_REACHED("Invalid Type");
         return MIRType_None;
     }
 
@@ -431,7 +431,7 @@ class Type
           case Void:      return "void";
           case Unknown:   return "unknown";
         }
-        JS_NOT_REACHED("Invalid Type");
+        MOZ_ASSUME_NOT_REACHED("Invalid Type");
         return "";
     }
 };
@@ -471,7 +471,7 @@ class RetType
           case Signed: return AsmJSModule::Return_Int32;
           case Double: return AsmJSModule::Return_Double;
         }
-        JS_NOT_REACHED("Unexpected return type");
+        MOZ_ASSUME_NOT_REACHED("Unexpected return type");
         return AsmJSModule::Return_Void;
     }
     MIRType toMIRType() const {
@@ -480,7 +480,7 @@ class RetType
           case Signed: return MIRType_Int32;
           case Double: return MIRType_Double;
         }
-        JS_NOT_REACHED("Unexpected return type");
+        MOZ_ASSUME_NOT_REACHED("Unexpected return type");
         return MIRType_None;
     }
     bool operator==(RetType rhs) const { return which_ == rhs.which_; }
@@ -496,7 +496,7 @@ operator<=(Type lhs, RetType rhs)
       case RetType::Double: return lhs == Type::Double;
       case RetType::Void:   return lhs == Type::Void;
     }
-    JS_NOT_REACHED("Unexpected rhs type");
+    MOZ_ASSUME_NOT_REACHED("Unexpected rhs type");
     return false;
 }
 
@@ -570,7 +570,7 @@ operator<=(Type lhs, VarType rhs)
       case VarType::Int:    return lhs.isInt();
       case VarType::Double: return lhs.isDouble();
     }
-    JS_NOT_REACHED("Unexpected rhs type");
+    MOZ_ASSUME_NOT_REACHED("Unexpected rhs type");
     return false;
 }
 
@@ -732,7 +732,7 @@ IsLiteralUint32(ParseNode *pn, uint32_t *u32)
         return false;
     }
 
-    JS_NOT_REACHED("Bad literal type");
+    MOZ_ASSUME_NOT_REACHED("Bad literal type");
 }
 
 static inline bool
@@ -752,7 +752,7 @@ IsBits32(ParseNode *pn, int32_t i)
         return false;
     }
 
-    JS_NOT_REACHED("Bad literal type");
+    MOZ_ASSUME_NOT_REACHED("Bad literal type");
 }
 
 /*****************************************************************************/
@@ -774,7 +774,7 @@ TypedArrayLoadType(ArrayBufferView::ViewType viewType)
         return Type::Doublish;
       default:;
     }
-    JS_NOT_REACHED("Unexpected array type");
+    MOZ_ASSUME_NOT_REACHED("Unexpected array type");
     return Type();
 }
 
@@ -799,7 +799,7 @@ TypedArrayStoreType(ArrayBufferView::ViewType viewType)
         return ArrayStore_Doublish;
       default:;
     }
-    JS_NOT_REACHED("Unexpected array type");
+    MOZ_ASSUME_NOT_REACHED("Unexpected array type");
     return ArrayStore_Doublish;
 }
 
@@ -3866,7 +3866,7 @@ IsValidIntMultiplyConstant(ParseNode *expr)
         return false;
     }
 
-    JS_NOT_REACHED("Bad literal");
+    MOZ_ASSUME_NOT_REACHED("Bad literal");
     return false;
 }
 
@@ -4045,7 +4045,7 @@ CheckBitwise(FunctionCompiler &f, ParseNode *bitwise, MDefinition **def, Type *t
       case PNK_LSH:    identityElement = 0;  onlyOnRight = true;  *type = Type::Signed;   break;
       case PNK_RSH:    identityElement = 0;  onlyOnRight = true;  *type = Type::Signed;   break;
       case PNK_URSH:   identityElement = 0;  onlyOnRight = true;  *type = Type::Unsigned; break;
-      default: JS_NOT_REACHED("not a bitwise op");
+      default: MOZ_ASSUME_NOT_REACHED("not a bitwise op");
     }
 
     if (!onlyOnRight && IsBits32(lhs, identityElement)) {
@@ -4091,7 +4091,7 @@ CheckBitwise(FunctionCompiler &f, ParseNode *bitwise, MDefinition **def, Type *t
       case PNK_LSH:    *def = f.bitwise<MLsh>(lhsDef, rhsDef); break;
       case PNK_RSH:    *def = f.bitwise<MRsh>(lhsDef, rhsDef); break;
       case PNK_URSH:   *def = f.bitwise<MUrsh>(lhsDef, rhsDef); break;
-      default: JS_NOT_REACHED("not a bitwise op");
+      default: MOZ_ASSUME_NOT_REACHED("not a bitwise op");
     }
 
     return true;
@@ -5639,7 +5639,7 @@ GenerateOOLConvert(ModuleCompiler &m, RetType retType, Label *throwLabel)
 #endif
           break;
       default:
-          JS_NOT_REACHED("Unsupported convert type");
+          MOZ_ASSUME_NOT_REACHED("Unsupported convert type");
     }
 
     masm.freeStack(stackDec);

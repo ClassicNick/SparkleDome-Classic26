@@ -3495,7 +3495,7 @@ class MDiv : public MBinaryArithInstruction
     void analyzeEdgeCasesBackward();
 
     double getIdentity() {
-        JS_NOT_REACHED("not used");
+        MOZ_ASSUME_NOT_REACHED("not used");
         return 1;
     }
 
@@ -3543,7 +3543,7 @@ class MMod : public MBinaryArithInstruction
     MDefinition *foldsTo(bool useValueNumbers);
 
     double getIdentity() {
-        JS_NOT_REACHED("not used");
+        MOZ_ASSUME_NOT_REACHED("not used");
         return 1;
     }
 
@@ -5957,7 +5957,7 @@ class MPolyInlineDispatch : public MControlInstruction, public SingleObjectPolic
             if (getFunction(i) == func)
                 return getFunctionBlock(i);
         }
-        JS_NOT_REACHED("Bad function lookup!");
+        MOZ_ASSUME_NOT_REACHED("Bad function lookup!");
     }
 
     InlinePropertyTable *propTable() const {

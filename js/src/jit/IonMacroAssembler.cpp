@@ -306,7 +306,7 @@ MacroAssembler::loadFromTypedArray(int arrayType, const T &src, AnyRegister dest
         canonicalizeDouble(dest.fpu());
         break;
       default:
-        JS_NOT_REACHED("Invalid typed array type");
+        MOZ_ASSUME_NOT_REACHED("Invalid typed array type");
         break;
     }
 }
@@ -362,7 +362,7 @@ MacroAssembler::loadFromTypedArray(int arrayType, const T &src, const ValueOpera
         boxDouble(ScratchFloatReg, dest);
         break;
       default:
-        JS_NOT_REACHED("Invalid typed array type");
+        MOZ_ASSUME_NOT_REACHED("Invalid typed array type");
         break;
     }
 }
@@ -1050,7 +1050,7 @@ MacroAssembler::enterExitFrameAndLoadContext(const VMFunction *f, Register cxReg
         enterParallelExitFrameAndLoadSlice(f, cxReg, scratch);
         break;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
 }
 
@@ -1072,7 +1072,7 @@ MacroAssembler::handleFailure(ExecutionMode executionMode)
         handler = JS_FUNC_TO_DATA_PTR(void *, jit::HandleParallelFailure);
         break;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
     MacroAssemblerSpecific::handleFailureWithHandler(handler);
 
@@ -1092,7 +1092,7 @@ MacroAssembler::tagCallee(Register callee, ExecutionMode mode)
         orPtr(Imm32(CalleeToken_ParallelFunction), callee);
         return;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
 }
 
@@ -1107,7 +1107,7 @@ MacroAssembler::clearCalleeTag(Register callee, ExecutionMode mode)
         andPtr(Imm32(~0x3), callee);
         return;
       default:
-        JS_NOT_REACHED("No such execution mode");
+        MOZ_ASSUME_NOT_REACHED("No such execution mode");
     }
 }
 
@@ -1256,7 +1256,7 @@ MacroAssembler::PushEmptyRooted(VMFunction::RootType rootType)
 {
     switch (rootType) {
       case VMFunction::RootNone:
-        JS_NOT_REACHED("Handle must have root type");
+        MOZ_ASSUME_NOT_REACHED("Handle must have root type");
         break;
       case VMFunction::RootObject:
       case VMFunction::RootString:
@@ -1277,7 +1277,7 @@ MacroAssembler::popRooted(VMFunction::RootType rootType, Register cellReg,
 {
     switch (rootType) {
       case VMFunction::RootNone:
-        JS_NOT_REACHED("Handle must have root type");
+        MOZ_ASSUME_NOT_REACHED("Handle must have root type");
         break;
       case VMFunction::RootObject:
       case VMFunction::RootString:

@@ -187,7 +187,7 @@ ParseContext<FullParseHandler>::define(JSContext *cx, HandlePropertyName name,
         break;
 
       default:
-        JS_NOT_REACHED("unexpected kind");
+        MOZ_ASSUME_NOT_REACHED("unexpected kind");
         break;
     }
 
@@ -278,7 +278,7 @@ AppendPackedBindings(const ParseContext<ParseHandler> *pc, const DeclVector &vec
             kind = ARGUMENT;
             break;
           default:
-            JS_NOT_REACHED("unexpected dn->kind");
+            MOZ_ASSUME_NOT_REACHED("unexpected dn->kind");
         }
 
         /*
@@ -3984,7 +3984,7 @@ Parser<FullParseHandler>::forStatement()
 
 #if JS_HAS_DESTRUCTURING
           case PNK_ASSIGN:
-            JS_NOT_REACHED("forStatement TOK_ASSIGN");
+            MOZ_ASSUME_NOT_REACHED("forStatement TOK_ASSIGN");
             break;
 
           case PNK_ARRAY:

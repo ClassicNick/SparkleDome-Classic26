@@ -1105,7 +1105,7 @@ IonBuilder::snoopControlFlow(JSOp op)
 
           default:
             // Hard assert for now - make an error later.
-            JS_NOT_REACHED("unknown goto case");
+            MOZ_ASSUME_NOT_REACHED("unknown goto case");
             break;
         }
         break;
@@ -1117,7 +1117,7 @@ IonBuilder::snoopControlFlow(JSOp op)
       case JSOP_IFNE:
         // We should never reach an IFNE, it's a stopAt point, which will
         // trigger closing the loop.
-        JS_NOT_REACHED("we should never reach an ifne!");
+        MOZ_ASSUME_NOT_REACHED("we should never reach an ifne!");
         return ControlStatus_Error;
 
       default:
@@ -1406,7 +1406,7 @@ IonBuilder::inspectOpcode(JSOp op)
 
       case JSOP_LOOPHEAD:
         // JSOP_LOOPHEAD is handled when processing the loop header.
-        JS_NOT_REACHED("JSOP_LOOPHEAD outside loop");
+        MOZ_ASSUME_NOT_REACHED("JSOP_LOOPHEAD outside loop");
         return true;
 
       case JSOP_GETELEM:
@@ -1607,7 +1607,7 @@ IonBuilder::processCfgEntry(CFGState &state)
         return processLabelEnd(state);
 
       default:
-        JS_NOT_REACHED("unknown cfgstate");
+        MOZ_ASSUME_NOT_REACHED("unknown cfgstate");
     }
     return ControlStatus_Error;
 }
@@ -2256,7 +2256,7 @@ IonBuilder::processSwitchBreak(JSOp op)
         breaks = &state.condswitch.breaks;
         break;
       default:
-        JS_NOT_REACHED("Unexpected switch state.");
+        MOZ_ASSUME_NOT_REACHED("Unexpected switch state.");
         return ControlStatus_Error;
     }
 
@@ -2333,7 +2333,7 @@ IonBuilder::maybeLoop(JSOp op, jssrcnote *sn)
         break;
 
       default:
-        JS_NOT_REACHED("unexpected opcode");
+        MOZ_ASSUME_NOT_REACHED("unexpected opcode");
         return ControlStatus_Error;
     }
 
@@ -2364,7 +2364,7 @@ IonBuilder::assertValidLoopHeadOp(jsbytecode *pc)
             break;
 
           default:
-            JS_NOT_REACHED("JSOP_LOOPHEAD unexpected source note");
+            MOZ_ASSUME_NOT_REACHED("JSOP_LOOPHEAD unexpected source note");
             return;
         }
 
@@ -3147,7 +3147,7 @@ IonBuilder::jsop_ifeq(JSOp op)
       }
 
       default:
-        JS_NOT_REACHED("unexpected source note type");
+        MOZ_ASSUME_NOT_REACHED("unexpected source note type");
         break;
     }
 
@@ -3177,7 +3177,7 @@ IonBuilder::processReturn(JSOp op)
 
       default:
         def = NULL;
-        JS_NOT_REACHED("unknown return op");
+        MOZ_ASSUME_NOT_REACHED("unknown return op");
         break;
     }
 
@@ -3267,7 +3267,7 @@ IonBuilder::jsop_bitop(JSOp op)
         break;
 
       default:
-        JS_NOT_REACHED("unexpected bitop");
+        MOZ_ASSUME_NOT_REACHED("unexpected bitop");
         return false;
     }
 
@@ -3325,7 +3325,7 @@ IonBuilder::jsop_binary(JSOp op, MDefinition *left, MDefinition *right)
         break;
 
       default:
-        JS_NOT_REACHED("unexpected binary opcode");
+        MOZ_ASSUME_NOT_REACHED("unexpected binary opcode");
         return false;
     }
 
@@ -6096,7 +6096,7 @@ jit::TypeSetIncludes(types::TypeSet *types, MIRType input, types::TypeSet *input
         return types->unknown() || (inputTypes && inputTypes->isSubset(types));
 
       default:
-        JS_NOT_REACHED("Bad input type");
+        MOZ_ASSUME_NOT_REACHED("Bad input type");
         return false;
     }
 }
@@ -6548,7 +6548,7 @@ IonBuilder::jsop_getelem_typed(int arrayType)
             knownType = MIRType_Double;
             break;
           default:
-            JS_NOT_REACHED("Unknown typed array type");
+            MOZ_ASSUME_NOT_REACHED("Unknown typed array type");
             return false;
         }
 
@@ -6595,7 +6595,7 @@ IonBuilder::jsop_getelem_typed(int arrayType)
                 needsBarrier = false;
             break;
           default:
-            JS_NOT_REACHED("Unknown typed array type");
+            MOZ_ASSUME_NOT_REACHED("Unknown typed array type");
             return false;
         }
 

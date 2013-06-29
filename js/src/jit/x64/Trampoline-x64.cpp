@@ -460,7 +460,7 @@ GenerateBailoutThunk(JSContext *cx, MacroAssembler &masm, uint32_t frameClass)
 IonCode *
 IonRuntime::generateBailoutTable(JSContext *cx, uint32_t frameClass)
 {
-    JS_NOT_REACHED("x64 does not use bailout tables");
+    MOZ_ASSUME_NOT_REACHED("x64 does not use bailout tables");
     return NULL;
 }
 
@@ -572,7 +572,7 @@ IonRuntime::generateVMWrapper(JSContext *cx, const VMFunction &f)
                 break;
               case VMFunction::DoubleByValue:
               case VMFunction::DoubleByRef:
-                JS_NOT_REACHED("NYI: x64 callVM should not be used with 128bits values.");
+                MOZ_ASSUME_NOT_REACHED("NYI: x64 callVM should not be used with 128bits values.");
                 break;
             }
         }
@@ -598,7 +598,7 @@ IonRuntime::generateVMWrapper(JSContext *cx, const VMFunction &f)
         masm.branchPtr(Assembler::NotEqual, rax, Imm32(TP_SUCCESS), &failure);
         break;
       default:
-        JS_NOT_REACHED("unknown failure kind");
+        MOZ_ASSUME_NOT_REACHED("unknown failure kind");
         break;
     }
 
