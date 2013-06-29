@@ -49,7 +49,7 @@ SurfaceStream::CreateForType(SurfaceStreamType type, mozilla::gl::GLContext* glC
             result = new SurfaceStream_TripleBuffer(prevStream);
             break;
         default:
-            MOZ_NOT_REACHED("Invalid SurfaceStream Type.");
+            MOZ_CRASH("Invalid SurfaceStream Type.");
             return nullptr;
     }
     

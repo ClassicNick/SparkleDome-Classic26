@@ -1779,13 +1779,13 @@ class RefLayer : public ContainerLayer {
 
 private:
   virtual void InsertAfter(Layer* aChild, Layer* aAfter)
-  { MOZ_NOT_REACHED("no"); }
+  { MOZ_CRASH("no"); }
 
   virtual void RemoveChild(Layer* aChild)
-  { MOZ_NOT_REACHED("no"); }
+  { MOZ_CRASH("no"); }
 
   virtual void RepositionChild(Layer* aChild, Layer* aAfter)
-  { MOZ_NOT_REACHED("no"); }
+  { MOZ_CRASH("no"); }
 
   using ContainerLayer::SetFrameMetrics;
 

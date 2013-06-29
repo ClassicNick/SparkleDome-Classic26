@@ -5662,7 +5662,7 @@ WebGLTexelFormat mozilla::GetWebGLTexelFormat(GLenum format, GLenum type)
             case LOCAL_GL_UNSIGNED_INT_24_8_EXT:
                 return WebGLTexelConversions::D24S8;
         }
-        MOZ_NOT_REACHED("Invalid WebGL texture format/type?");
+        MOZ_CRASH("Invalid WebGL texture format/type?");
         return WebGLTexelConversions::BadFormat;
     }
 

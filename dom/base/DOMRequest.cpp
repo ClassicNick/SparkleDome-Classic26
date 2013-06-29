@@ -91,7 +91,7 @@ DOMRequest::GetReadyState(nsAString& aReadyState)
       aReadyState.AssignLiteral("done");
       break;
     default:
-      MOZ_NOT_REACHED("Unrecognized readyState.");
+      MOZ_CRASH("Unrecognized readyState.");
   }
 
   return NS_OK;

@@ -3077,7 +3077,7 @@ nsObjectLoadingContent::ShouldPlay(FallbackType &aReason, bool aIgnoreCurrentTyp
   case nsIPluginTag::STATE_CLICKTOPLAY:
     return false;
   }
-  MOZ_NOT_REACHED("Unexpected enabledState");
+  MOZ_CRASH("Unexpected enabledState");
   return false;
 }
 

@@ -1959,7 +1959,7 @@ ContentParent::AllocPBluetooth()
     }
     return new mozilla::dom::bluetooth::BluetoothParent();
 #else
-    MOZ_NOT_REACHED("No support for bluetooth on this platform!");
+    MOZ_CRASH("No support for bluetooth on this platform!");
     return nullptr;
 #endif
 }
@@ -1971,7 +1971,7 @@ ContentParent::DeallocPBluetooth(PBluetoothParent* aActor)
     delete aActor;
     return true;
 #else
-    MOZ_NOT_REACHED("No support for bluetooth on this platform!");
+    MOZ_CRASH("No support for bluetooth on this platform!");
     return false;
 #endif
 }
@@ -1985,7 +1985,7 @@ ContentParent::RecvPBluetoothConstructor(PBluetoothParent* aActor)
 
     return static_cast<BluetoothParent*>(aActor)->InitWithService(btService);
 #else
-    MOZ_NOT_REACHED("No support for bluetooth on this platform!");
+    MOZ_CRASH("No support for bluetooth on this platform!");
     return false;
 #endif
 }

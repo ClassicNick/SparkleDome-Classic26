@@ -191,7 +191,7 @@ WebGLFramebuffer::Attachment::IsComplete() const {
         {
             return IsValidFBOTextureColorFormat(internalFormat);
         }
-        MOZ_NOT_REACHED("Invalid WebGL attachment point?");
+        MOZ_CRASH("Invalid WebGL attachment point?");
     }
 
     if (mRenderbufferPtr) {
@@ -212,7 +212,7 @@ WebGLFramebuffer::Attachment::IsComplete() const {
         {
             return IsValidFBORenderbufferColorFormat(internalFormat);
         }
-        MOZ_NOT_REACHED("Invalid WebGL attachment point?");
+        MOZ_CRASH("Invalid WebGL attachment point?");
     }
 
     NS_ABORT(); // should never get there
