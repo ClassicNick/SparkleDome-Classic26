@@ -80,7 +80,7 @@ PluginInstanceParent::PluginInstanceParent(PluginModuleParent* parent,
     , mShColorSpace(nullptr)
 #endif
 {
-#ifdef OS_WIN
+#if defined OS_WIN && defined CAIRO_HAS_D2D_SURFACE
     mTextureMap.Init();
 #endif
 }
@@ -1748,7 +1748,7 @@ PluginInstanceParent::AnswerNPN_InitAsyncSurface(const gfxIntSize& size,
             *result = true;
             return true;
         }
-#ifdef XP_WIN
+#if defined XP_WIN && defined CAIRO_HAS_D2D_SURFACE
     case NPDrawingModelAsyncWindowsDXGISurface: {
             ID3D10Device1 *device = gfxWindowsPlatform::GetPlatform()->GetD3D10Device();
 
@@ -1814,7 +1814,7 @@ PluginInstanceParent::RecvNegotiatedCarbon()
 bool
 PluginInstanceParent::RecvReleaseDXGISharedSurface(const DXGISharedSurfaceHandle &aHandle)
 {
-#ifdef XP_WIN
+#if defined XP_WIN && defined CAIRO_HAS_D2D_SURFACE
     mTextureMap.Remove(aHandle);
 #endif
     return true;

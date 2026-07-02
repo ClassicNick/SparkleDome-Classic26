@@ -548,7 +548,12 @@ EXTRA_DSO_LDOPTS += -Wl,--warn-unresolved-symbols
 endif
 
 ifeq ($(OS_ARCH),WINNT)
+ifdef CAIRO_HAS_D2D_SURFACE
+# Inexplicit Windows 7 SDK check
 OS_LIBS += $(call EXPAND_LIBNAME,shell32 ole32 uuid version winspool comdlg32 imm32 winmm wsock32 msimg32 shlwapi psapi ws2_32 dbghelp rasapi32 rasdlg iphlpapi uxtheme setupapi secur32 sensorsapi portabledeviceguids windowscodecs wininet)
+else
+OS_LIBS += $(call EXPAND_LIBNAME,shell32 ole32 uuid version winspool comdlg32 imm32 winmm wsock32 msimg32 shlwapi psapi ws2_32 dbghelp rasapi32 rasdlg iphlpapi uxtheme setupapi secur32 windowscodecs wininet)
+endif
 ifneq (,$(MOZ_DEBUG)$(NS_TRACE_MALLOC))
 OS_LIBS += $(call EXPAND_LIBNAME,imagehlp)
 endif

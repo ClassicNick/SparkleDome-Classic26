@@ -333,20 +333,26 @@ nsWindow::nsWindow() : nsWindowBase()
   mTransparentSurface   = nullptr;
   mMemoryDC             = nullptr;
   mTransparencyMode     = eTransparencyOpaque;
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   memset(&mGlassMargins, 0, sizeof mGlassMargins);
+#endif
 #endif
   mBackground           = ::GetSysColor(COLOR_BTNFACE);
   mBrush                = ::CreateSolidBrush(NSRGB_2_COLOREF(mBackground));
   mForeground           = ::GetSysColor(COLOR_WINDOWTEXT);
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   mTaskbarPreview = nullptr;
   mHasTaskbarIconBeenCreated = false;
+#endif
 
   // Global initialization
   if (!sInstanceCount) {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
     // Global app registration id for Win7 and up. See
     // WinTaskbar.cpp for details.
     mozilla::widget::WinTaskbar::RegisterAppUserModelID();
+#endif
     KeyboardLayout::GetInstance()->OnLayoutChange(::GetKeyboardLayout(0));
     IMEHandler::Initialize();
     if (SUCCEEDED(::OleInitialize(NULL))) {
@@ -519,10 +525,12 @@ nsWindow::Create(nsIWidget *aParent,
     return NS_ERROR_FAILURE;
   }
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if (mIsRTL && nsUXThemeData::dwmSetWindowAttributePtr) {
     DWORD dwAttribute = TRUE;    
     nsUXThemeData::dwmSetWindowAttributePtr(mWnd, DWMWA_NONCLIENT_RTL_LAYOUT, &dwAttribute, sizeof dwAttribute);
   }
+#endif
 
   if (mWindowType != eWindowType_plugin &&
       mWindowType != eWindowType_invisible &&
@@ -2549,6 +2557,7 @@ RegionFromArray(const nsTArray<nsIntRect>& aRects)
 
 void nsWindow::UpdateOpaqueRegion(const nsIntRegion &aOpaqueRegion)
 {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if (!HasGlass() || GetParent())
     return;
 
@@ -2592,10 +2601,12 @@ void nsWindow::UpdateOpaqueRegion(const nsIntRegion &aOpaqueRegion)
     mGlassMargins = margins;
     UpdateGlass();
   }
+#endif // #if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 }
 
 void nsWindow::UpdateGlass()
 {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   MARGINS margins = mGlassMargins;
 
   // DWMNCRP_USEWINDOWSTYLE - The non-client rendering area is
@@ -2628,6 +2639,7 @@ void nsWindow::UpdateGlass()
     nsUXThemeData::dwmExtendFrameIntoClientAreaPtr(mWnd, &margins);
     nsUXThemeData::dwmSetWindowAttributePtr(mWnd, DWMWA_NCRENDERING_POLICY, &policy, sizeof policy);
   }
+#endif // #if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 }
 #endif
 
@@ -4439,6 +4451,7 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
   bool result = false;    // call the default nsWindow proc
   *aRetValue = 0;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   // Glass hit testing w/custom transparent margins
   LRESULT dwmHitResult;
   if (mCustomNonClient &&
@@ -4450,6 +4463,7 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
     *aRetValue = dwmHitResult;
     return true;
   }
+#endif
 
   switch (msg) {
     // WM_QUERYENDSESSION must be handled by all windows.
@@ -4623,9 +4637,11 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
       if (!mCustomNonClient)
         break;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
       // let the dwm handle nc painting on glass
       if(nsUXThemeData::CheckForCompositor())
         break;
+#endif
 
       if (wParam == TRUE) {
         // going active
@@ -4657,9 +4673,11 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
       if (!mCustomNonClient)
         break;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
       // let the dwm handle nc painting on glass
       if(nsUXThemeData::CheckForCompositor())
         break;
+#endif
 
       HRGN paintRgn = ExcludeNonClientFromPaintRegion((HRGN)wParam);
       LRESULT res = CallWindowProcW(GetPrevWindowProc(), mWnd,
@@ -5184,6 +5202,7 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
     }
     break;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   case WM_DWMCOMPOSITIONCHANGED:
     // First, update the compositor state to latest one. All other methods
     // should use same state as here for consistency painting.
@@ -5196,6 +5215,7 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
     UpdateGlass();
     Invalidate(true, true, true);
     break;
+#endif
 
   case WM_UPDATEUISTATE:
   {
@@ -5227,12 +5247,14 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
     *aRetValue = TABLET_ROTATE_GESTURE_ENABLE;
     break;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   case WM_TOUCH:
     result = OnTouch(wParam, lParam);
     if (result) {
       *aRetValue = 0;
     }
     break;
+#endif
 
   case WM_GESTURE:
     result = OnGesture(wParam, lParam);
@@ -5347,8 +5369,10 @@ bool nsWindow::ProcessMessage(UINT msg, WPARAM &wParam, LPARAM &lParam,
 
     default:
     {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
       if (msg == nsAppShell::GetTaskbarButtonCreatedMessage())
         SetHasTaskbarIconBeenCreated();
+#endif
       if (msg == sOOPPPluginFocusEvent) {
         if (wParam == 1) {
           // With OOPP, the plugin window exists in another process and is a child of
@@ -5968,6 +5992,7 @@ void nsWindow::UserActivity()
   }
 }
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
 bool nsWindow::OnTouch(WPARAM wParam, LPARAM lParam)
 {
   uint32_t cInputs = LOWORD(wParam);
@@ -6057,6 +6082,7 @@ bool nsWindow::OnTouch(WPARAM wParam, LPARAM lParam)
   mGesture.CloseTouchInputHandle((HTOUCHINPUT)lParam);
   return true;
 }
+#endif
 
 static int32_t RoundDown(double aDouble)
 {
@@ -6741,8 +6767,10 @@ void nsWindow::SetWindowTranslucencyInner(nsTransparencyMode aMode)
   ::SetWindowLongPtrW(hWnd, GWL_STYLE, style);
   ::SetWindowLongPtrW(hWnd, GWL_EXSTYLE, exStyle);
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if (HasGlass())
     memset(&mGlassMargins, 0, sizeof mGlassMargins);
+#endif
   mTransparencyMode = aMode;
 
   SetupTranslucentWindowMemoryBitmap(aMode);

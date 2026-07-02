@@ -8,7 +8,7 @@
 #include "mozilla/layers/TextureClientOGL.h"
 #include "mozilla/layers/LayerTransactionChild.h"
 #include "mozilla/layers/CompositableForwarder.h"
-#ifdef XP_WIN
+#if defined XP_WIN && defined MOZ_ENABLE_D3D10_LAYER
 #include "mozilla/layers/TextureD3D11.h"
 #include "gfxWindowsPlatform.h"
 #endif
@@ -105,7 +105,7 @@ CompositableClient::CreateTextureClient(TextureClientType aTextureClientType)
     }
     break;
   case TEXTURE_CONTENT:
-#ifdef XP_WIN
+#if defined XP_WIN && defined MOZ_ENABLE_D3D9_LAYER
     if (parentBackend == LAYERS_D3D11 && gfxWindowsPlatform::GetPlatform()->GetD2DDevice()) {
       result = new TextureClientD3D11(GetForwarder(), GetTextureInfo());
       break;

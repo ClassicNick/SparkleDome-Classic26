@@ -18,16 +18,20 @@ using namespace mozilla::widget;
 
 const PRUnichar
 nsUXThemeData::kThemeLibraryName[] = L"uxtheme.dll";
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 const PRUnichar
 nsUXThemeData::kDwmLibraryName[] = L"dwmapi.dll";
+#endif
 
 HANDLE
 nsUXThemeData::sThemes[eUXNumClasses];
 
 HMODULE
 nsUXThemeData::sThemeDLL = NULL;
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 HMODULE
 nsUXThemeData::sDwmDLL = NULL;
+#endif
 
 BOOL
 nsUXThemeData::sFlatMenus = FALSE;
@@ -52,6 +56,7 @@ nsUXThemeData::GetCurrentThemeNamePtr nsUXThemeData::getCurrentThemeName = NULL;
 nsUXThemeData::GetThemeSysColorPtr nsUXThemeData::getThemeSysColor = NULL;
 nsUXThemeData::IsThemeBackgroundPartiallyTransparentPtr nsUXThemeData::isThemeBackgroundPartiallyTransparent = NULL;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 nsUXThemeData::DwmExtendFrameIntoClientAreaProc nsUXThemeData::dwmExtendFrameIntoClientAreaPtr = NULL;
 nsUXThemeData::DwmIsCompositionEnabledProc nsUXThemeData::dwmIsCompositionEnabledPtr = NULL;
 nsUXThemeData::DwmSetIconicThumbnailProc nsUXThemeData::dwmSetIconicThumbnailPtr = NULL;
@@ -60,14 +65,17 @@ nsUXThemeData::DwmGetWindowAttributeProc nsUXThemeData::dwmGetWindowAttributePtr
 nsUXThemeData::DwmSetWindowAttributeProc nsUXThemeData::dwmSetWindowAttributePtr = NULL;
 nsUXThemeData::DwmInvalidateIconicBitmapsProc nsUXThemeData::dwmInvalidateIconicBitmapsPtr = NULL;
 nsUXThemeData::DwmDefWindowProcProc nsUXThemeData::dwmDwmDefWindowProcPtr = NULL;
+#endif
 
 void
 nsUXThemeData::Teardown() {
   Invalidate();
   if(sThemeDLL)
     FreeLibrary(sThemeDLL);
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if(sDwmDLL)
     FreeLibrary(sDwmDLL);
+#endif
 }
 
 void
@@ -93,6 +101,7 @@ nsUXThemeData::Initialize()
     getThemeSysColor = (GetThemeSysColorPtr)GetProcAddress(sThemeDLL, "GetThemeSysColor");
     isThemeBackgroundPartiallyTransparent = (IsThemeBackgroundPartiallyTransparentPtr)GetProcAddress(sThemeDLL, "IsThemeBackgroundPartiallyTransparent");
   }
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if (GetDwmDLL()) {
     dwmExtendFrameIntoClientAreaPtr = (DwmExtendFrameIntoClientAreaProc)::GetProcAddress(sDwmDLL, "DwmExtendFrameIntoClientArea");
     dwmIsCompositionEnabledPtr = (DwmIsCompositionEnabledProc)::GetProcAddress(sDwmDLL, "DwmIsCompositionEnabled");
@@ -104,6 +113,7 @@ nsUXThemeData::Initialize()
     dwmDwmDefWindowProcPtr = (DwmDefWindowProcProc)::GetProcAddress(sDwmDLL, "DwmDefWindowProc");
     CheckForCompositor(true);
   }
+#endif
 
   Invalidate();
 }
@@ -151,12 +161,14 @@ nsUXThemeData::GetThemeDLL() {
   return sThemeDLL;
 }
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 HMODULE
 nsUXThemeData::GetDwmDLL() {
   if (!sDwmDLL && WinUtils::GetWindowsVersion() >= WinUtils::VISTA_VERSION)
     sDwmDLL = ::LoadLibraryW(kDwmLibraryName);
   return sDwmDLL;
 }
+#endif
 
 const wchar_t *nsUXThemeData::GetClassName(nsUXThemeClass cls) {
   switch(cls) {
@@ -234,6 +246,7 @@ nsUXThemeData::UpdateTitlebarInfo(HWND aWnd)
   if (!aWnd)
     return;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if (!sTitlebarInfoPopulatedAero && nsUXThemeData::CheckForCompositor()) {
     RECT captionButtons;
     if (SUCCEEDED(nsUXThemeData::dwmGetWindowAttributePtr(aWnd,
@@ -245,6 +258,7 @@ nsUXThemeData::UpdateTitlebarInfo(HWND aWnd)
       sTitlebarInfoPopulatedAero = true;
     }
   }
+#endif
 
   if (sTitlebarInfoPopulatedThemed)
     return;

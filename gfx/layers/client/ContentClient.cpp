@@ -32,7 +32,7 @@ ContentClient::CreateContentClient(CompositableForwarder* aForwarder)
 
   bool useDoubleBuffering = false;
 
-#ifdef XP_WIN
+#if defined XP_WIN && defined MOZ_ENABLE_D3D9_LAYER
   if (aForwarder->GetCompositorBackendType() == LAYERS_D3D11) {
     useDoubleBuffering = !!gfxWindowsPlatform::GetPlatform()->GetD2DDevice();
   } else

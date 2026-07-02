@@ -192,7 +192,7 @@ NS_IMETHODIMP nsFilePicker::Init(nsIDOMWindow *aParent, const nsAString& aTitle,
 {
   nsCOMPtr<nsPIDOMWindow> window = do_QueryInterface(aParent);
   nsIDocShell* docShell = window ? window->GetDocShell() : NULL;  
-  mLoadContext = do_QueryInterface(docShell);
+  mLoadContext = do_QueryInterface((nsILoadContext*) docShell);
   
   return nsBaseFilePicker::Init(aParent, aTitle, aMode);
 }
@@ -617,6 +617,7 @@ nsFilePicker::ShowFolderPicker(const nsString& aInitialDir, bool &aWasInitError)
 
   // results
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   // If the user chose a Win7 Library, resolve to the library's
   // default save folder.
   nsRefPtr<IShellItem> folderPath;
@@ -629,6 +630,7 @@ nsFilePicker::ShowFolderPicker(const nsString& aInitialDir, bool &aWasInitError)
                                                getter_AddRefs(folderPath)))) {
     item.swap(folderPath);
   }
+#endif
 
   // get the folder's file system path
   return WinUtils::GetShellItemPath(item, mUnicodeFile);
@@ -1247,11 +1249,15 @@ nsFilePicker::AppendXPFilter(const nsAString& aTitle, const nsAString& aFilter)
 NS_IMETHODIMP
 nsFilePicker::AppendFilter(const nsAString& aTitle, const nsAString& aFilter)
 {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   if (WinUtils::GetWindowsVersion() >= WinUtils::VISTA_VERSION) {
     mComFilterList.Append(aTitle, aFilter);
   } else {
     AppendXPFilter(aTitle, aFilter);
   }
+#else
+	 AppendXPFilter(aTitle, aFilter);
+#endif
   return NS_OK;
 }
 

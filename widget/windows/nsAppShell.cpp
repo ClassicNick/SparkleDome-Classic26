@@ -79,12 +79,14 @@ const PRUnichar* kTaskbarButtonEventId = L"TaskbarButtonCreated";
 
 static UINT sMsgId;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
 UINT sTaskbarButtonCreatedMsg;
 
 /* static */
 UINT nsAppShell::GetTaskbarButtonCreatedMessage() {
 	return sTaskbarButtonCreatedMsg;
 }
+#endif
 
 //-------------------------------------------------------------------------
 
@@ -118,8 +120,10 @@ nsAppShell::Init()
   if (!sMsgId)
     sMsgId = RegisterWindowMessageW(kAppShellEventId);
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
   NS_ASSERTION(sTaskbarButtonCreatedMsg, "Could not register taskbar button creation message");
+#endif
 
   WNDCLASSW wc;
   HINSTANCE module = GetModuleHandle(NULL);
@@ -150,9 +154,11 @@ nsAppShell::Init()
 NS_IMETHODIMP
 nsAppShell::Run(void)
 {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   // Ignore failure; failing to start the application is not exactly an
   // appropriate response to failing to start an audio session.
   mozilla::widget::StartAudioSession();
+#endif
 
   // Add an observer that disables the screen saver when requested by Gecko.
   // For example when we're playing video in the foreground tab.
@@ -162,7 +168,9 @@ nsAppShell::Run(void)
 
   RemoveScreenWakeLockListener();
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   mozilla::widget::StopAudioSession();
+#endif
 
   return rv;
 }

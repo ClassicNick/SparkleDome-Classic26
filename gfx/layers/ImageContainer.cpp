@@ -23,13 +23,14 @@
 #include "mozilla/gfx/QuartzSupport.h"
 #endif
 
-#ifdef XP_WIN
+#if defined XP_WIN && defined CAIRO_HAS_D2D_SURFACE
 #include "gfxD2DSurface.h"
 #include "gfxWindowsPlatform.h"
 #include <d3d10_1.h>
 #include "d3d10/ImageLayerD3D10.h"
-#include "D3D9SurfaceImage.h"
 #endif
+
+#include "D3D9SurfaceImage.h"
 
 using namespace mozilla::ipc;
 using namespace android;
@@ -389,7 +390,7 @@ ImageContainer::EnsureActiveImage()
               
       mActiveImage = newImg;
     }
-#ifdef XP_WIN
+#if defined XP_WIN && defined CAIRO_HAS_D2D_SURFACE
     else if (mRemoteData->mType == RemoteImageData::DXGI_TEXTURE_HANDLE &&
              mRemoteData->mTextureHandle && !mActiveImage) {
       nsRefPtr<RemoteDXGITextureImage> newImg = new RemoteDXGITextureImage();

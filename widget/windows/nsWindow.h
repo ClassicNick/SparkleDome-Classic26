@@ -70,7 +70,9 @@ class nsWindow : public nsWindowBase
   typedef mozilla::TimeStamp TimeStamp;
   typedef mozilla::TimeDuration TimeDuration;
   typedef mozilla::widget::WindowHook WindowHook;
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   typedef mozilla::widget::TaskbarWindowPreview TaskbarWindowPreview;
+#endif
   typedef mozilla::widget::NativeKey NativeKey;
 public:
   nsWindow();
@@ -249,6 +251,7 @@ public:
    */
   bool                    AssociateDefaultIMC(bool aAssociate);
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   bool HasTaskbarIconBeenCreated() { return mHasTaskbarIconBeenCreated; }
   // Called when either the nsWindow or an nsITaskbarTabPreview receives the noticiation that this window
   // has its icon placed on the taskbar.
@@ -260,6 +263,7 @@ public:
     return preview.forget();
   }
   void SetTaskbarPreview(nsITaskbarWindowPreview *preview) { mTaskbarPreview = do_GetWeakReference(preview); }
+#endif
 
   NS_IMETHOD              ReparentNativeWidget(nsIWidget* aNewParent);
 
@@ -346,7 +350,9 @@ protected:
   virtual bool            OnMove(int32_t aX, int32_t aY);
   virtual bool            OnResize(nsIntRect &aWindowRect);
   bool                    OnGesture(WPARAM wParam, LPARAM lParam);
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   bool                    OnTouch(WPARAM wParam, LPARAM lParam);
+#endif
   bool                    OnHotKey(WPARAM wParam, LPARAM lParam);
   bool                    OnPaint(HDC aDC, uint32_t aNestingLevel);
   void                    OnWindowPosChanged(WINDOWPOS *wp, bool& aResult);
@@ -514,18 +520,22 @@ protected:
   nsRefPtr<gfxASurface> mTransparentSurface;
   HDC                   mMemoryDC;
   nsTransparencyMode    mTransparencyMode;
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   nsIntRegion           mPossiblyTransparentRegion;
   MARGINS               mGlassMargins;
+#endif
 #endif // MOZ_XUL
 
   // Win7 Gesture processing and management
   nsWinGesture          mGesture;
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   // Weak ref to the nsITaskbarWindowPreview associated with this window
   nsWeakPtr             mTaskbarPreview;
   // True if the taskbar (possibly through the tab preview) tells us that the
   // icon has been created on the taskbar.
   bool                  mHasTaskbarIconBeenCreated;
+#endif
 
   // The point in time at which the last paint completed. We use this to avoid
   //  painting too rapidly in response to frequent input events.

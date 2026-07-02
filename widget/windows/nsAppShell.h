@@ -29,7 +29,9 @@ public:
   nsresult Init();
   void DoProcessMoreGoannaEvents();
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   static UINT GetTaskbarButtonCreatedMessage();
+#endif
 
 protected:
   NS_IMETHOD Run();

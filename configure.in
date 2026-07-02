@@ -408,8 +408,8 @@ dnl ========================================================
 dnl Special win32 checks
 dnl ========================================================
 
-# Target the Windows 7 SDK by default
-WINSDK_TARGETVER=601
+# Target the Windows Vista SDK by default
+WINSDK_TARGETVER=600
 WINVER=502
 
 AC_SUBST(CRTDLLVERSION)
@@ -417,20 +417,30 @@ AC_SUBST(CRTEXPDLLVERSION)
 
 MOZ_ARG_WITH_STRING(windows-version,
 [  --with-windows-version=WINSDK_TARGETVER
-                          Windows SDK version to target. Lowest version
-                          currently allowed is 601 (Win7), highest is 602 (Win8)],
+                          Highest Windows version to target using this SDK
+                              502: Windows Server 2003
+                              600: Windows Vista
+                              601: Windows 7
+                              602: Windows 8],
   WINSDK_TARGETVER=$withval)
 
 # Currently only two sdk versions allowed, 601 and 602
 case "$WINSDK_TARGETVER" in
-601|602)
+502|600|601|602)
     MOZ_WINSDK_TARGETVER=0${WINSDK_TARGETVER}0000
     ;;
 
 *)
-    AC_MSG_ERROR([Invalid value for --with-windows-version ($WINSDK_TARGETVER)]);
+    AC_MSG_ERROR([Invalid value for --with-windows-version ($WINSDK_TARGETVER), must be 502, 600, 601 or 602]);
     ;;
 esac
+
+if test -n "$COMPILE_ENVIRONMENT"; then
+if test "$MOZ_WINSDK_TARGETVER" -lt "06000000"; then
+    # We can't build parental controls either
+    MOZ_DISABLE_PARENTAL_CONTROLS=1
+fi
+fi
 
 case "$target" in
 *-mingw*)
@@ -751,6 +761,8 @@ case "$target" in
     
     AC_DEFINE_UNQUOTED(MOZ_WINSDK_TARGETVER,0x$MOZ_WINSDK_TARGETVER)
     # Definitions matching sdkddkver.h
+	AC_DEFINE_UNQUOTED(MOZ_NTDDI_WS03, 0x05020000)
+    AC_DEFINE_UNQUOTED(MOZ_NTDDI_LONGHORN, 0x06000000)
     AC_DEFINE_UNQUOTED(MOZ_NTDDI_WIN7, 0x06010000)
     AC_DEFINE_UNQUOTED(MOZ_WINSDK_MAXVER,$MOZ_WINSDK_MAXVER)
     AC_SUBST(MOZ_WINSDK_MAXVER)
@@ -4126,7 +4138,14 @@ NSS_NO_LIBPKIX=
 case "$target_os" in
     mingw*)
         NS_ENABLE_TSF=1
-        AC_DEFINE(NS_ENABLE_TSF)
+        if test -z "$GNU_CC"; then
+            if test "$MOZ_WINSDK_TARGETVER" -lt "06000000"; then
+                NS_ENABLE_TSF=
+            fi
+        fi
+        if test -n "$NS_ENABLE_TSF"; then
+            AC_DEFINE(NS_ENABLE_TSF)
+        fi
         ;;
 esac
 
@@ -5298,7 +5317,11 @@ MOZ_ARG_DISABLE_BOOL(ogg,
 
 if test -n "$MOZ_OGG"; then
     AC_DEFINE(MOZ_OGG)
+if test "$MOZ_WINSDK_TARGETVER" -ge "06010000"; then
     MOZ_CUBEB=1
+else
+	MOZ_CUBEB=1
+fi
 
     dnl Checks for __attribute__(aligned()) directive
     AC_CACHE_CHECK([__attribute__ ((aligned ())) support],
@@ -5360,7 +5383,11 @@ MOZ_ARG_DISABLE_BOOL(wmf,
 
 if test -n "$MOZ_WMF"; then
     AC_DEFINE(MOZ_WMF)
+if test "$MOZ_WINSDK_TARGETVER" -ge "06010000"; then
     MOZ_CUBEB=1
+else
+	MOZ_CUBEB=1
+fi
 fi;
 
 dnl ========================================================
@@ -5456,7 +5483,11 @@ if test "$MOZ_WEBP"; then
 fi
 
 if test "$MOZ_WEBM"; then
+if test "$MOZ_WINSDK_TARGETVER" -ge "06010000"; then
     MOZ_CUBEB=1
+else
+	MOZ_CUBEB=1
+fi
     if test "$MOZ_SAMPLE_TYPE_FLOAT32"; then
         MOZ_VORBIS=1
     else
@@ -5557,7 +5588,11 @@ MOZ_ARG_DISABLE_BOOL(wave,
 
 if test -n "$MOZ_WAVE"; then
     AC_DEFINE(MOZ_WAVE)
+if test "$MOZ_WINSDK_TARGETVER" -ge "06010000"; then
     MOZ_CUBEB=1
+else
+	MOZ_CUBEB=1
+fi
 fi
 
 dnl ========================================================
@@ -7247,6 +7282,26 @@ MOZ_ARG_DISABLE_BOOL(gcincremental,
     JSGC_INCREMENTAL= )
 if test -n "$JSGC_INCREMENTAL"; then
     AC_DEFINE(JSGC_INCREMENTAL)
+fi
+
+dnl ========================================================
+dnl ETW - Event Tracing for Windows
+dnl ========================================================
+MOZ_ARG_ENABLE_BOOL(ETW,
+[  --enable-ETW            Enable ETW (Event Tracing for Windows) event reporting
+                          (needs Windows Vista+ SDK)],
+    MOZ_ETW=1,
+    MOZ_ETW= )
+if test -n "$MOZ_ETW"; then
+    AC_DEFINE(MOZ_ETW)
+fi
+
+if test -n "$MOZ_ETW"; then
+    if test -z "$MOZ_WINSDK_TARGETVER"; then
+        AC_MSG_ERROR([--enable-ETW is only valid on Windows])
+    elif test "$MOZ_WINSDK_TARGETVER" -lt "06000000"; then
+        AC_MSG_ERROR([--enable-ETW requires the Windows Vista SDK or newer])
+    fi
 fi
 
 dnl ========================================================

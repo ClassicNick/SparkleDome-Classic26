@@ -51,11 +51,19 @@ using namespace mozilla::gfx;
 #include "nsMemory.h"
 #endif
 
+#if defined MOZ_ENABLE_D3D10_LAYER
 #include <d3d11.h>
+#endif
 
+#if MOZ_WINSDK_TARGETVER > MOZ_NTDDI_WIN7
+#define ENABLE_GPU_MEM_REPORTER
+#endif
+
+#ifdef ENABLE_GPU_MEM_REPORTER
 #include "nsIMemoryReporter.h"
 #include <winternl.h>
 #include "d3dkmtQueryStatistics.h"
+#endif
 
 using namespace mozilla;
 
@@ -120,6 +128,7 @@ NS_MEMORY_REPORTER_IMPLEMENT(
 namespace
 {
 
+#ifdef CAIRO_HAS_D2D_SURFACE
 int64_t GetD2DVRAMUsageDrawTarget() {
     return mozilla::gfx::Factory::GetD2DVRAMUsageDrawTarget();
 }
@@ -127,9 +136,11 @@ int64_t GetD2DVRAMUsageDrawTarget() {
 int64_t GetD2DVRAMUsageSourceSurface() {
     return mozilla::gfx::Factory::GetD2DVRAMUsageSourceSurface();
 }
+#endif
 
 } // anonymous namespace
 
+#ifdef CAIRO_HAS_D2D_SURFACE
 NS_MEMORY_REPORTER_IMPLEMENT(
     D2DVRAMDT,
     "gfx-d2d-vram-drawtarget",
@@ -145,6 +156,7 @@ NS_MEMORY_REPORTER_IMPLEMENT(
     UNITS_BYTES,
     GetD2DVRAMUsageSourceSurface,
     "Video memory used by D2D SourceSurfaces.")
+#endif
 
 #define GFX_USE_CLEARTYPE_ALWAYS "gfx.font_rendering.cleartype.always_use_for_content"
 #define GFX_DOWNLOADABLE_FONTS_USE_CLEARTYPE "gfx.font_rendering.cleartype.use_for_downloadable_fonts"
@@ -178,11 +190,14 @@ typedef HRESULT (WINAPI*D3D10CreateDevice1Func)(
 );
 #endif
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
 typedef HRESULT(WINAPI*CreateDXGIFactory1Func)(
   REFIID riid,
   void **ppFactory
 );
+#endif
 
+#if defined MOZ_ENABLE_D3D10_LAYER
 typedef HRESULT (WINAPI*D3D11CreateDeviceFunc)(
   IDXGIAdapter *pAdapter,
   D3D_DRIVER_TYPE DriverType,
@@ -195,7 +210,9 @@ typedef HRESULT (WINAPI*D3D11CreateDeviceFunc)(
   D3D_FEATURE_LEVEL *pFeatureLevel,
   ID3D11DeviceContext *ppImmediateContext
 );
+#endif
 
+#ifdef ENABLE_GPU_MEM_REPORTER
 class GPUAdapterMultiReporter : public nsIMemoryMultiReporter {
 
     // Callers must Release the DXGIAdapter after use or risk mem-leak
@@ -338,6 +355,7 @@ public:
     }
 };
 NS_IMPL_ISUPPORTS1(GPUAdapterMultiReporter, nsIMemoryMultiReporter)
+#endif // ENABLE_GPU_MEM_REPORTER
 
 static __inline void
 BuildKeyNameFromFontName(nsAString &aName)
@@ -348,7 +366,9 @@ BuildKeyNameFromFontName(nsAString &aName)
 }
 
 gfxWindowsPlatform::gfxWindowsPlatform()
+#ifdef MOZ_ENABLE_D3D10_LAYER
   : mD3D11DeviceInitialized(false)
+#endif
 {
     mPrefFonts.Init(50);
 
@@ -369,13 +389,17 @@ gfxWindowsPlatform::gfxWindowsPlatform()
     NS_RegisterMemoryReporter(new NS_MEMORY_REPORTER_NAME(D2DVram));
     mD2DDevice = nullptr;
 #endif
+#ifdef CAIRO_HAS_D2D_SURFACE
     NS_RegisterMemoryReporter(new NS_MEMORY_REPORTER_NAME(D2DVRAMDT));
     NS_RegisterMemoryReporter(new NS_MEMORY_REPORTER_NAME(D2DVRAMSS));
+#endif
 
     UpdateRenderMode();
 
+#ifdef ENABLE_GPU_MEM_REPORTER
     mGPUAdapterMultiReporter = new GPUAdapterMultiReporter();
     NS_RegisterMemoryMultiReporter(mGPUAdapterMultiReporter);
+#endif
 }
 
 gfxWindowsPlatform::~gfxWindowsPlatform()
@@ -389,9 +413,9 @@ gfxWindowsPlatform::~gfxWindowsPlatform()
     if (mD2DDevice) {
         cairo_release_device(mD2DDevice);
     }
-#endif
 
     mozilla::gfx::Factory::D2DCleanup();
+#endif
 
     /* 
      * Uninitialize COM 
@@ -705,6 +729,7 @@ gfxWindowsPlatform::CreateOffscreenImageSurface(const gfxIntSize& aSize,
 TemporaryRef<ScaledFont>
 gfxWindowsPlatform::GetScaledFontForFont(DrawTarget* aTarget, gfxFont *aFont)
 {
+#if defined CAIRO_HAS_DWRITE_FONT
     if (aFont->GetType() == gfxFont::FONT_TYPE_DWRITE) {
         gfxDWriteFont *font = static_cast<gfxDWriteFont*>(aFont);
 
@@ -721,6 +746,7 @@ gfxWindowsPlatform::GetScaledFontForFont(DrawTarget* aTarget, gfxFont *aFont)
         return Factory::CreateScaledFontForNativeFont(nativeFont,
                                                       font->GetAdjustedSize());
     }
+#endif
 
     NS_ASSERTION(aFont->GetType() == gfxFont::FONT_TYPE_GDI,
         "Fonts on windows should be GDI or DWrite!");
@@ -743,7 +769,7 @@ gfxWindowsPlatform::GetScaledFontForFont(DrawTarget* aTarget, gfxFont *aFont)
 already_AddRefed<gfxASurface>
 gfxWindowsPlatform::GetThebesSurfaceForDrawTarget(DrawTarget *aTarget)
 {
-#ifdef XP_WIN
+#if defined XP_WIN && defined CAIRO_HAS_D2D_SURFACE
   if (aTarget->GetType() == BACKEND_DIRECT2D) {
     if (!GetD2DDevice()) {
       // We no longer have a D2D device, can't do this.
@@ -1441,6 +1467,7 @@ gfxWindowsPlatform::SetupClearTypeParams()
 #endif
 }
 
+#if defined MOZ_ENABLE_D3D10_LAYER
 ID3D11Device*
 gfxWindowsPlatform::GetD3D11Device()
 {
@@ -1483,6 +1510,7 @@ gfxWindowsPlatform::GetD3D11Device()
 
   return mD3D11Device;
 }
+#endif
 
 bool
 gfxWindowsPlatform::IsOptimus()
@@ -1490,6 +1518,7 @@ gfxWindowsPlatform::IsOptimus()
   return GetModuleHandleA("nvumdshim.dll");
 }
 
+#if defined MOZ_ENABLE_D3D10_LAYER
 IDXGIAdapter1*
 gfxWindowsPlatform::GetDXGIAdapter()
 {
@@ -1527,3 +1556,4 @@ gfxWindowsPlatform::GetDXGIAdapter()
 
   return mAdapter;
 }
+#endif

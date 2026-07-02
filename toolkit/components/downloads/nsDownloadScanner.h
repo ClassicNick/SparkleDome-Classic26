@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* vim: se cin sw=2 ts=2 et : */
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 
 #ifndef nsDownloadScanner_h_
 #define nsDownloadScanner_h_
@@ -120,3 +121,4 @@ private:
 };
 #endif
 
+#endif

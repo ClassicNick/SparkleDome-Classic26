@@ -212,6 +212,7 @@ public:
   static HRESULT SHCreateItemFromParsingName(PCWSTR pszPath, IBindCtx *pbc,
                                              REFIID riid, void **ppv);
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   /**
    * SHGetKnownFolderPath() calls native SHGetKnownFolderPath()
    * API which is available on Vista and up.
@@ -220,6 +221,7 @@ public:
                                       DWORD dwFlags,
                                       HANDLE hToken,
                                       PWSTR *ppszPath);
+#endif
   /**
    * GetShellItemPath return the file or directory path of a shell item.
    * Internally calls IShellItem's GetDisplayName.
@@ -266,11 +268,13 @@ private:
                                                             REFIID riid,
                                                             void **ppv);
   static SHCreateItemFromParsingNamePtr sCreateItemFromParsingName;
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
   typedef HRESULT (WINAPI * SHGetKnownFolderPathPtr)(REFKNOWNFOLDERID rfid,
                                                      DWORD dwFlags,
                                                      HANDLE hToken,
                                                      PWSTR *ppszPath);
   static SHGetKnownFolderPathPtr sGetKnownFolderPath;
+#endif
 };
 
 #ifdef MOZ_PLACES

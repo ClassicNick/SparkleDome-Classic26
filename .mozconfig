@@ -1,18 +1,51 @@
-ac_add_options --with-windows-version=601
-ac_add_options --enable-jemalloc
-ac_add_options --enable-application=browser
-ac_add_options --disable-webgl
-ac_add_options --disable-gamepad
-ac_add_options --disable-angle
-ac_add_options --disable-tests
-ac_add_options --disable-mochitests
-ac_add_options --disable-updater
-ac_add_options --disable-crashreporter
-ac_add_options --enable-strip
-ac_add_options --enable-strip-libs
-ac_add_options --enable-shared-js
-ac_add_options --disable-jit
-ac_add_options --disable-skia
-ac_add_options --disable-jsd
-ac_add_options --disable-maintenance-service
+#
+#  RETROZILLA BROWSER (FIREFOX) MOZCONFIG
+#
+
+# Make Options
+#mk_add_options MOZ_MAKE_FLAGS="-j3"
+
+# Set line below to your desired object directory
+mk_add_options MOZ_OBJDIR=e:/objdir/pmupdates/master/obj-pmvc80-release
+#WIN32_REDIST_DIR=j:/Browsers/VC8Compat/redist/VC80/SP1
+
+
+# Configure Options
 ac_add_options --target=i686-pc-mingw32
+ac_add_options --enable-application=browser
+ac_add_options --enable-optimize
+ac_add_options --disable-debug
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-tests
+ac_add_options --without-system-jpg
+ac_add_options --without-system-zlib
+ac_add_options --enable-crypto
+ac_add_options --enable-svg
+ac_add_options --enable-canvas
+ac_add_options --disable-activex
+ac_add_options --disable-activex-scripting
+ac_add_options --disable-updater
+ac_add_options --disable-accessibility
+ac_add_options --enable-default-toolkit=cairo-windows
+ac_add_options --enable-libxul
+ac_add_options --disable-crashreporter
+ac_add_options --disable-vista-sdk-requirements
+ac_add_options --disable-webgl
+ac_add_options --disable-angle
+ac_add_options --disable-gamepad
+ac_add_options --disable-methodjit
+ac_add_options --disable-tracejit
+ac_add_options --disable-jit
+ac_add_options --enable-ipc
+ac_add_options --enable-webm
+ac_add_options --enable-sps
+ac_add_options --disable-skia
+ac_add_options --disable-maintenance-service
+ac_add_options --disable-updater
+ac_add_options --disable-cubeb
+ac_add_options --disable-websms-backend
+ac_add_options --disable-webrtc
+ac_add_options --disable-wmf
+ac_add_options --with-windows-version=600
+
+# Branding Options

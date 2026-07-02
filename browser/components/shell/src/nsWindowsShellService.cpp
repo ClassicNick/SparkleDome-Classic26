@@ -359,6 +359,7 @@ bool
 nsWindowsShellService::IsDefaultBrowserVista(bool aCheckAllTypes,
                                              bool* aIsDefaultBrowser)
 {
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
   IApplicationAssociationRegistration* pAAR;
   HRESULT hr = CoCreateInstance(CLSID_ApplicationAssociationRegistration,
                                 NULL,
@@ -389,6 +390,7 @@ nsWindowsShellService::IsDefaultBrowserVista(bool aCheckAllTypes,
     pAAR->Release();
     return true;
   }
+#endif
   return false;
 }
 
@@ -664,7 +666,7 @@ nsresult
 nsWindowsShellService::LaunchHTTPHandlerPane()
 {
   OPENASINFO info;
-  info.pcszFile = L"http";
+  info.pcszFile = (LPCSTR) L"http";
   info.pcszClass = NULL;
   info.oaifInFlags = OAIF_FORCE_REGISTRATION | 
                      OAIF_URL_PROTOCOL |

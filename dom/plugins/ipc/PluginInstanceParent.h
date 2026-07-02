@@ -11,7 +11,9 @@
 #include "mozilla/plugins/PluginScriptableObjectParent.h"
 #if defined(OS_WIN)
 #include "mozilla/gfx/SharedDIBWin.h"
+#if defined CAIRO_HAS_D2D_SURFACE
 #include <d3d10_1.h>
+#endif
 #include "nsRefPtrHashtable.h"
 #elif defined(MOZ_WIDGET_COCOA)
 #include "mozilla/gfx/QuartzSupport.h"
@@ -339,8 +341,10 @@ private:
     WNDPROC            mPluginWndProc;
     bool               mNestedEventState;
 
+#if defined CAIRO_HAS_D2D_SURFACE
     // This will automatically release the textures when this object goes away.
     nsRefPtrHashtable<nsPtrHashKey<void>, ID3D10Texture2D> mTextureMap;
+#endif
 #endif // defined(XP_WIN)
 #if defined(MOZ_WIDGET_COCOA)
 private:

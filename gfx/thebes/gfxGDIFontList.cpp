@@ -104,7 +104,7 @@ typedef LONG( WINAPI *TTDeleteEmbeddedFontProc ) (HANDLE hFontReference, ULONG u
 
 static TTLoadEmbeddedFontProc TTLoadEmbeddedFontPtr = nullptr;
 static TTDeleteEmbeddedFontProc TTDeleteEmbeddedFontPtr = nullptr;
-
+static HMODULE fontlib;
 
 class WinUserFontData : public gfxUserFontData {
 public:
@@ -623,6 +623,12 @@ gfxGDIFontList::gfxGDIFontList()
     mFontSubstitutes.Init(50);
 
     InitializeFontEmbeddingProcs();
+	
+	// Make sure the t2embed library is available because it may be
+    // disabled to work around security vulnerabilities.
+    if (!fontlib) {
+        fontlib = LoadLibraryW(L"t2embed.dll");
+    }
 }
 
 static void
@@ -927,6 +933,10 @@ gfxGDIFontList::MakePlatformFont(const gfxProxyFontEntry *aProxyEntry,
 
     // if calls aren't available, bail
     if (!TTLoadEmbeddedFontPtr || !TTDeleteEmbeddedFontPtr)
+		return nullptr;
+
+    // if the t2embed library isn't available, bail
+    if (!fontlib)
         return nullptr;
 
     bool hasVertical;

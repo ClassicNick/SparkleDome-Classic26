@@ -20,7 +20,9 @@
 
 #if defined(XP_WIN)
 #include "gfxWindowsPlatform.h"
+#if defined CAIRO_HAS_D2D_SURFACE
 #include "gfxD2DSurface.h"
+#endif
 #elif defined(XP_MACOSX)
 #include "gfxPlatformMac.h"
 #elif defined(MOZ_WIDGET_GTK)
@@ -596,7 +598,7 @@ gfxPlatform::GetSourceSurfaceForSurface(DrawTarget *aTarget, gfxASurface *aSurfa
 
   RefPtr<SourceSurface> srcBuffer;
 
-#ifdef XP_WIN
+#if defined XP_WIN && defined CAIRO_HAS_D2D_SURFACE
   if (aSurface->GetType() == gfxASurface::SurfaceTypeD2D) {
     NativeSurface surf;
     surf.mFormat = format;

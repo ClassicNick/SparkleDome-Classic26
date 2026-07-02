@@ -50,7 +50,9 @@ namespace widget {
 
 // apis available on vista and up.
 WinUtils::SHCreateItemFromParsingNamePtr WinUtils::sCreateItemFromParsingName = NULL;
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
 WinUtils::SHGetKnownFolderPathPtr WinUtils::sGetKnownFolderPath = NULL;
+#endif
 
 static const PRUnichar kSehllLibraryName[] =  L"shell32.dll";
 static HMODULE sShellDll = NULL;
@@ -451,6 +453,7 @@ WinUtils::SHCreateItemFromParsingName(PCWSTR pszPath, IBindCtx *pbc,
   return sCreateItemFromParsingName(pszPath, pbc, riid, ppv);
 }
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
 /* static */
 HRESULT 
 WinUtils::SHGetKnownFolderPath(REFKNOWNFOLDERID rfid,
@@ -476,6 +479,7 @@ WinUtils::SHGetKnownFolderPath(REFKNOWNFOLDERID rfid,
 
   return sGetKnownFolderPath(rfid, dwFlags, hToken, ppszPath);
 }
+#endif
 
 #ifdef MOZ_PLACES
 /************************************************************************/

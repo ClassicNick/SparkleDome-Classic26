@@ -8,6 +8,8 @@
 #ifndef __mozilla_widget_TaskbarPreviewButton_h__
 #define __mozilla_widget_TaskbarPreviewButton_h__
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
+
 #include <windows.h>
 #include <shobjidl.h>
 
@@ -41,6 +43,8 @@ private:
 
 } // namespace widget
 } // namespace mozilla
+
+#endif // #if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_WIN7
 
 #endif /* __mozilla_widget_TaskbarPreviewButton_h__ */
 

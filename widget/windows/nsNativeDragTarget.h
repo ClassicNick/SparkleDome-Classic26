@@ -11,7 +11,9 @@
 #include <shlobj.h>
 
 #ifndef IDropTargetHelper
+#ifndef __MINGW32__   // MingW does not provide shobjidl.h.
 #include <shobjidl.h> // Vista drag image interfaces
+#endif
 #endif
 
 #include "mozilla/Attributes.h"

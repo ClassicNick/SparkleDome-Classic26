@@ -324,7 +324,11 @@ static nsresult GetResidentFast(int64_t *n)
     return GetResident(n);
 }
 
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
 #define HAVE_PRIVATE_REPORTER
+#endif
+
+#ifdef HAVE_PRIVATE_REPORTER
 class PrivateReporter MOZ_FINAL : public MemoryReporterBase
 {
 public:
@@ -350,6 +354,7 @@ public:
         return NS_OK;
     }
 };
+#endif
 
 #endif  // XP_<PLATFORM>
 

@@ -102,6 +102,11 @@ private:
     nsresult HasFileAttribute(DWORD fileAttrib, bool *_retval);
     nsresult AppendInternal(const nsAFlatString &node,
                             bool multipleComponents);
+	nsresult RevealClassic(); // Reveals the path using explorer.exe cmdline
+    nsresult RevealUsingShell(); // Uses newer shell API to reveal the path
+
+    static ILCreateFromPathWPtr sILCreateFromPathW;
+    static SHOpenFolderAndSelectItemsPtr sSHOpenFolderAndSelectItems;
 };
 
 #endif

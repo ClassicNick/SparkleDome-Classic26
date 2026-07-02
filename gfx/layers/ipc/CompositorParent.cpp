@@ -13,7 +13,7 @@
 #include "CompositorParent.h"
 #include "mozilla/layers/CompositorOGL.h"
 #include "mozilla/layers/BasicCompositor.h"
-#ifdef XP_WIN
+#if defined XP_WIN && defined MOZ_ENABLE_D3D10_LAYER
 #include "mozilla/layers/CompositorD3D11.h"
 #endif
 #include "LayerTransactionParent.h"
@@ -584,7 +584,7 @@ CompositorParent::AllocPLayerTransaction(const LayersBackend& aBackendHint,
   } else if (aBackendHint == mozilla::layers::LAYERS_BASIC) {
     mLayerManager =
       new LayerManagerComposite(new BasicCompositor(mWidget));
-#ifdef XP_WIN
+#if defined XP_WIN && defined MOZ_ENABLE_D3D10_LAYER
   } else if (aBackendHint == mozilla::layers::LAYERS_D3D11) {
     mLayerManager =
       new LayerManagerComposite(new CompositorD3D11(mWidget));
