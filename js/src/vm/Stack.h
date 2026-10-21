@@ -1153,6 +1153,7 @@ class Activation
     JSContext *cx_;
     JSCompartment *compartment_;
     Activation *prev_;
+	bool active_;
 
     // Counter incremented by JS_SaveFrameChain on the top-most activation and
     // decremented by JS_RestoreFrameChain. If > 0, ScriptFrameIter should stop
