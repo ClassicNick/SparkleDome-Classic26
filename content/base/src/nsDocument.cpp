@@ -22,7 +22,6 @@
 #include "plstr.h"
 #include "prprf.h"
 
-#include "mozilla/Telemetry.h"
 #include "nsIInterfaceRequestor.h"
 #include "nsIInterfaceRequestorUtils.h"
 #include "nsDocument.h"
@@ -1462,7 +1461,6 @@ nsDocument::~nsDocument()
       } else if (hasMixedDisplay) {
         mixedContentLevel = MIXED_DISPLAY_CONTENT;
       }
-      Accumulate(Telemetry::MIXED_CONTENT_PAGE_LOAD, mixedContentLevel);
     }
   }
 

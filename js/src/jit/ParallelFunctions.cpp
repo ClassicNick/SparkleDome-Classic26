@@ -195,7 +195,7 @@ jit::ParExtendArray(ForkJoinSlice *slice, JSObject *array, uint32_t length)
 }
 
 ParallelResult
-ion::ParConcatStrings(ForkJoinSlice *slice, HandleString left, HandleString right,
+jit::ParConcatStrings(ForkJoinSlice *slice, HandleString left, HandleString right,
                       MutableHandleString out)
 {
     JSString *str = ConcatStrings<NoGC>(slice, left, right);
@@ -206,7 +206,7 @@ ion::ParConcatStrings(ForkJoinSlice *slice, HandleString left, HandleString righ
 }
 
 ParallelResult
-ion::ParIntToString(ForkJoinSlice *slice, int i, MutableHandleString out)
+jit::ParIntToString(ForkJoinSlice *slice, int i, MutableHandleString out)
 {
     JSFlatString *str = Int32ToString<NoGC>(slice, i);
     if (!str)
@@ -216,7 +216,7 @@ ion::ParIntToString(ForkJoinSlice *slice, int i, MutableHandleString out)
 }
 
 ParallelResult
-ion::ParDoubleToString(ForkJoinSlice *slice, double d, MutableHandleString out)
+jit::ParDoubleToString(ForkJoinSlice *slice, double d, MutableHandleString out)
 {
     JSString *str = js_NumberToString<NoGC>(slice, d);
     if (!str)
