@@ -9,7 +9,6 @@ MODULE = 'gfxtest'
 LIBRARY_NAME = 'gfxtest'
 
 GTEST_CPP_SOURCES += [
-    'TestAsyncPanZoomController.cpp',
     'TestLayers.cpp',
     'TestTiledLayerBuffer.cpp',
 ]
