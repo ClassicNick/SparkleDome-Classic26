@@ -261,7 +261,7 @@ PRMJ_Now()
         needsCalibration = true;
     }
 
-    MOZ_NOT_REACHED("Shouldn't get here (PRMJ_Now)");
+    MOZ_CRASH("Shouldn't get here (PRMJ_Now)");
 }
 #endif
 

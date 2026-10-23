@@ -145,8 +145,7 @@ nsXBLBinding::nsXBLBinding(nsXBLPrototypeBinding* aBinding)
   : mIsStyleBinding(true),
     mMarkedForDeath(false),
     mUsingXBLScope(false),
-    mPrototypeBinding(aBinding),
-    mInsertionPointTable(nullptr)
+    mPrototypeBinding(aBinding)
 {
   NS_ASSERTION(mPrototypeBinding, "Must have a prototype binding!");
   // Grab a ref to the document info so the prototype binding won't die
